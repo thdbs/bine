@@ -151,3 +151,20 @@ class PlayerRightIdleState(CharacterState):
             player.frame = 0
             CharacterState.ChangeState(self, player, player.PlayerStateMap["Down"])
 
+class TurtleMonsterIdleState(CharacterState):
+
+    def __init__(self):
+        pass
+
+    def Update(self, monster):
+        monster.Timer += 1
+        if monster.Timer >= 6:
+            monster.Timer = 0
+            monster.frame = ( monster.frame + 1 ) % 12
+
+    def Render(self, monster):
+        global TurtleMonsterGraphicMap
+        if monster.target.x > monster.x :
+            TurtleMonsterGraphicMap["RightIdle"].Draw(monster.x- Camera.xPos, monster.y- Camera.yPos + 47, monster.frame)
+        else:
+            TurtleMonsterGraphicMap["LeftIdle"].Draw(monster.x- Camera.xPos, monster.y- Camera.yPos + 47, monster.frame)

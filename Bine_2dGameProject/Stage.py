@@ -7,6 +7,13 @@ StageDataMap = {}
 StageImageMap = {}
 nowStage = None
 
+class Size:
+    def __init__(self, right, bottom, width, height):
+        self.right = right
+        self.bottom = bottom
+        self.width = width
+        self.height = height
+
 def LoadStageData():
     global StageDataMap
     arr11 = []
@@ -24,6 +31,7 @@ def LoadStageImage():
     global StageImageMap
     Stage1R1image = load_image('Resource/Stage/stage1_room1.png')
     StageImageMap["Stage1Room1"] = Stage1R1image
+
 
 def Draw():
     global StageImageMap, nowStage

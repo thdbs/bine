@@ -4,6 +4,7 @@ from pico2d import *
 PlayerGraphicMap = {}
 WeaponGraphicMap = {}
 BulletGraphicMap = {}
+TurtleMonsterGraphicMap = {}
 
 class Animation:
     def __init__(self, image, width, height):
@@ -16,7 +17,7 @@ class Animation:
 
 
 def InitMainStateGraphic(): #Call By mainState
-    global PlayerGraphicMap, WeaponGraphicMap, BulletGraphicMap
+    global PlayerGraphicMap, WeaponGraphicMap, BulletGraphicMap, TurtleMonsterGraphicMap
     #Player Sprite Load
     PrIdle = load_image('Resource/Player/spr_jimmy_idle_right.png')
     PlayerGraphicMap["RightIde"] = Animation(PrIdle, 114, 94)
@@ -36,5 +37,11 @@ def InitMainStateGraphic(): #Call By mainState
     #BulletImageLoad
     shotGunBullet = load_image('Resource/Weapon/spr_shotgun_bullet.png')
     BulletGraphicMap["ShotGun"] = shotGunBullet
+
+    #Monster ImageLoad
+    TrIdle = load_image('Resource/Monster/turtle_monster_idle_right.jpg')
+    TurtleMonsterGraphicMap["RightIdle"] = Animation(TrIdle, 114, 94)
+    TlIdle = load_image('Resource/Monster/turtle_monster_idle_left.jpg')
+    TurtleMonsterGraphicMap["LeftIdle"] = Animation(TlIdle, 114, 94)
 
 

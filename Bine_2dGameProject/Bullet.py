@@ -6,15 +6,16 @@ from Graphic import *
 import Stage
 
 class Bullet:
-    def __init__(self, x, y, rad, speedRate, width, height):
+    def __init__(self, x, y, rad, speedRate, width, height, ally = True):
         self.x = x
         self.y = y
         self.radian = rad
 
-        self.speed = 10
+        self.speed = 20
         self.speedRate = speedRate
 
         self.alive = True
+        self.ally = ally
 
         self.width =width
         self.height = height

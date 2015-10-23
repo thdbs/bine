@@ -12,11 +12,13 @@ import Graphic
 import InputManager
 import Stage
 import BulletManager
+from Monster import *
+import random
 
 name = "MainState"
 
 Hero = None
-GraphicList = {}
+MonsterList = []
 
 def enter():
     global Hero
@@ -25,6 +27,9 @@ def enter():
     Stage.LoadStageImage()
     Stage.SetNowStage("Stage1Room1")
     Hero = Player(797, 935, 55, 80)
+    #Create Monster
+    m1 = TurtleMonster(797 + 500 + random.randint(10, 100), 935, 55, 80, Hero)
+    MonsterList.append(m1)
 
 def exit():
     global  Hero
@@ -48,6 +53,10 @@ def handle_events():
             InputManager.KeyDown(event.key)
             if event.key == SDLK_ESCAPE:
                 game_framework.quit()
+            #나중에 없애기
+            if event.key == SDLK_m:
+                m1 = TurtleMonster(797 + 500+ random.randint(10, 500), 935, 55, 80, Hero)
+                MonsterList.append(m1)
         elif event.type == SDL_KEYUP:
             InputManager.KeyUp(event.key)
         elif event.type == SDL_MOUSEMOTION:
@@ -68,15 +77,25 @@ def handle_events():
 def update():
     global Hero
     Hero.Update()
+    for i in MonsterList:
+        i.Update()
     BulletManager.Update()
+    for i in MonsterList:
+        for j in BulletManager.BulletList:
+            if i.CollisionCheck(j):
+                MonsterList.remove(i)
+                BulletManager.BulletList.remove(j)
+                break
     delay(0.01)
 
 
 def draw():
-    global Hero
+    global Hero, MonsterList
     clear_canvas()
     Stage.Draw()
     Hero.Render()
+    for i in MonsterList:
+        i.Render()
     BulletManager.Rener()
     update_canvas()
 
