@@ -82,7 +82,7 @@ def update():
     BulletManager.Update()
     for i in MonsterList:
         for j in BulletManager.BulletList:
-            if i.CollisionCheck(j):
+            if i.BulletCollisionCheck(j):
                 MonsterList.remove(i)
                 BulletManager.BulletList.remove(j)
                 break

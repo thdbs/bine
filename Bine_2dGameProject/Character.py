@@ -15,9 +15,9 @@ class Character:
 
         self.ally = True
 
-    def CollisionCheck(self, Object):
+    def BulletCollisionCheck(self, Object):
         if self.x - self.width/2 < Object.x + Object.width/2 and self.x + self.width/2 > Object.x - Object.width/2 and \
-            self.y - self.height/2 < Object.y + Object.height/2 and self.y + self.height/2 > Object.y - Object.height/2 and \
+            self.y < Object.y + Object.height/2 and self.y + self.height > Object.y - Object.height/2 and \
                 self.ally is not Object.ally :
             return(True)
         return(False)
