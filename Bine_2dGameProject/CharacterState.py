@@ -168,3 +168,6 @@ class TurtleMonsterIdleState(CharacterState):
             TurtleMonsterGraphicMap["RightIdle"].Draw(monster.x- Camera.xPos, monster.y- Camera.yPos + 47, monster.frame)
         else:
             TurtleMonsterGraphicMap["LeftIdle"].Draw(monster.x- Camera.xPos, monster.y- Camera.yPos + 47, monster.frame)
+
+class TurtleMonsterAttackState(CharacterState):
+    pass;
