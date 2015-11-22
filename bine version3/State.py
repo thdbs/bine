@@ -35,8 +35,9 @@ class Dash(State):
     def enter(self, character):
         pass
 
-    def update(self, character):
-        pass
+    def update(self, character, frameTime):
+        Action.actionList['move'].update(character, frameTime)
+        Action.actionList['increaseFrame'].update(character, frameTime)
 
     def render(self, character):
         pass
@@ -49,8 +50,8 @@ class Melee(State):
     def enter(self, character):
         pass
 
-    def update(self, character):
-        pass
+    def update(self, character, frameTime):
+        Action.actionList['increaseFrame'].update(character, frameTime)
 
     def render(self, character):
         pass
@@ -63,8 +64,8 @@ class Idle(Melee):
     def enter(self, character):
         pass
 
-    def update(self, character):
-        pass
+    def update(self, character, frameTime):
+        Action.actionList['increaseFrame'].update(character, frameTime)
 
     def render(self, character):
         pass

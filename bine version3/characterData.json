@@ -1,6 +1,6 @@
 {
   "Jimmy" : { "name" : "Jimmy", "maxHealth" : 280, "maxShield" : 60
   , "collisionBoxWidth" : 50, "collisionBoxHeight" : 80
-  , "walkSpeedPPS" : 3, "dashSpeedPPS" : 2, "dashTime" : 1.0
+  , "walkSpeedPPS" : 300, "dashSpeedPPS" : 3, "dashTime" : 0.3
   }
 }

@@ -4,14 +4,13 @@ import StageManager
 import Character
 import DrawManager
 
-actionList = None
-maxSpeed = 6 #revise 동기화 문제고려
+actionList = {}
+maxSpeed = 80    #revise 동기화 문제고려해서
 
-def GetAction(action):
-    global actionList, maxSpeed
-    #action 생성
-
-    return actionList[action]
+def GenAction():
+    global actionList
+    actionList['move'] = Move()
+    actionList['increaseFrame'] = IncreaseFrame()
 
 class Action:
     def Update(self):
@@ -19,7 +18,7 @@ class Action:
 
 
 class Move(Action):
-    def Update(self, character, frameTime):
+    def update(self, character, frameTime):
         global maxSpeed
         shiftX = character.vx*frameTime
         shiftY = character.vy*frameTime
@@ -35,12 +34,12 @@ class Move(Action):
 
 
 class IncreaseFrame(Action):
-    def Update(self, character, frameTime):
-        character.frmaeTimer += frameTime
-        if(character.frmaeTimer >= DrawManager.frameInterval):
-            increaseRate = character.frmaeTimer / DrawManger.frameInterval
-            character.frmaeTimer = 0
+    def update(self, character, frameTime):
+        character.frameTimer += frameTime
+        if(character.frameTimer >= DrawManager.frame_Interval):
+            increaseRate = int(character.frameTimer / DrawManager.frame_Interval)
+            character.frameTimer = 0
             sprName = character.name + '_' + character.stateName
-            character.frame = (character.frame + increaseRate) % DrawManager.sprList['sprName']
+            character.frame = (character.frame + increaseRate) % DrawManager.CharacterGraphicList[sprName].frame
 
 

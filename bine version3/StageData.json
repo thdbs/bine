@@ -1,0 +1,12 @@
+{
+  "stage1_1" : { "width" : 36, "height" : 17, "tileWidth" : 128, "tileHeight" : 128,
+    "inTeleportX" : 797, "inTeleportY" : 935, "outTeleportX" : 3737, "outTeleportY" : 1151 },
+  "stage1_2" : { "width" : 30, "height" : 25, "tileWidth" : 128, "tileHeight" : 128,
+    "inTeleportX" : 3073, "inTeleportY" : 2415, "outTeleportX" : 1105, "outTeleportY" : 1623 },
+  "stage2_boss" : { "width" : 30, "height" : 25, "tileWidth" : 128, "tileHeight" : 128,
+    "inTeleportX" : 769, "inTeleportY" : 1259, "outTeleportX" : 2921, "outTeleportY" : 1551 },
+  "stage2_exit" : { "width" : 60, "height" : 17, "tileWidth" : 128, "tileHeight" : 128,
+    "inTeleportX" : 849, "inTeleportY" : 1023, "outTeleportX" : 6913, "outTeleportY" : 1126 },
+  "shop" : { "width" : 22, "height" : 14, "tileWidth" : 128, "tileHeight" : 128,
+    "inTeleportX" : 765, "inTeleportY" : 771, "outTeleportX" : 2009, "outTeleportY" : 771 }
+}

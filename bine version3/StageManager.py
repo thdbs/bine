@@ -1,49 +1,89 @@
 __author__ = '성소윤'
 
-from pico2d import *
+import DrawManager
+import json
 import Camera
 
-StageDataMap = {}
-StageImageMap = {}
-nowStage = None
+StageDataList = {}
+curStage = None
 
-class Size:
-    def __init__(self, right, bottom, width, height):
-        self.right = right
-        self.bottom = bottom
-        self.width = width
-        self.height = height
 
-def LoadStageData():
-    global StageDataMap
-    arr11 = []
-    f = open('Resource/Stage/stage1_room1.txt','r')
+def GenStageData() :
+    global StageDataList, curStage
+    curStage = 'stage2_exit'
+    with open('StageData.json') as f:
+        StageDataList = json.load(f)
+    #text Load
+    stage1_1 = []
+    f = open('Resource/Sprites/Stage/stage1_room1.txt','r')
     lines = f.readlines()
     for line in lines:
         list = line.split()
-        arr11.append(list)
-
-    StageDataMap["Stage1Room1"] = arr11
-
+        stage1_1.append(list)
+    StageDataList["stage1_1"]["data"] = stage1_1
     f.close()
+    stage1_2 = []
+    f = open('Resource/Sprites/Stage/stage1_room2.txt','r')
+    lines = f.readlines()
+    for line in lines:
+        list = line.split()
+        stage1_2.append(list)
+    StageDataList["stage1_2"]["data"] = stage1_2
+    f.close()
+    stage2_boss = []
+    f = open('Resource/Sprites/Stage/stage2_boss.txt','r')
+    lines = f.readlines()
+    for line in lines:
+        list = line.split()
+        stage2_boss.append(list)
+    StageDataList["stage2_boss"]["data"] = stage2_boss
+    f.close()
+    stage2_exit = []
+    f = open('Resource/Sprites/Stage/stage2_exit.txt','r')
+    lines = f.readlines()
+    for line in lines:
+        list = line.split()
+        stage2_exit.append(list)
+    StageDataList["stage2_exit"]["data"] = stage2_exit
+    f.close()
+    shop = []
+    f = open('Resource/Sprites/Stage/shop.txt','r')
+    lines = f.readlines()
+    for line in lines:
+        list = line.split()
+        shop.append(list)
+    StageDataList["shop"]["data"] = shop
+    f.close()
+    Camera.SetPos(StageDataList[curStage]['inTeleportX'], StageDataList[curStage]['inTeleportY'])
 
-def LoadStageImage():
-    global StageImageMap
-    Stage1R1image = load_image('Resource/Stage/stage1_room1.png')
-    StageImageMap["Stage1Room1"] = Stage1R1image
 
+def Render():
+    global curStage
+    DrawManager.StageGraphicList[curStage].Draw()
 
-def Draw():
-    global StageImageMap, nowStage
-    StageImageMap[nowStage].clip_draw( int(Camera.xPos),int(Camera.yPos), int(Camera.width), int(Camera.height), int(Camera.width/2), int(Camera.height/2) )
-
-def SetNowStage(stage):
-    global nowStage
-    nowStage = stage
 
 def GetMapDate(row, col):
-    global StageDataMap,nowStage
-    return(StageDataMap[nowStage][row][col])
+    global StageDataList, curStage
+    return StageDataList[curStage]['data'][row][col]
 
 
 def MapCollisionCheck(charcter, shiftX, shiftY):
+    global StageDataList, curStage
+    row = int((StageDataList[curStage]['tileHeight']*StageDataList[curStage]['height'] - (charcter.y + shiftY)) / StageDataList[curStage]['tileHeight'])
+    rightCol = int((charcter.x + (charcter.wCollisionBox/2) + shiftX) / StageDataList[curStage]['tileWidth'])
+    leftCol = int((charcter.x - (charcter.wCollisionBox/2) + shiftX) / StageDataList[curStage]['tileWidth'])
+    if GetMapDate(row, rightCol) != '0' : return True
+    if GetMapDate(row, leftCol) != '0' : return True
+    return False
+
+
+def ChangeStage():
+    pass
+
+
+def CreateInTeleport():
+    pass
+
+
+def ActiveOutTeleport():
+    pass

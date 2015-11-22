@@ -14,4 +14,19 @@
     "hit" : { "width" : 114, "height" : 94, "frame" : 2 },
     "death" : { "width" : 114, "height" : 94, "frame" : 14 }
   }
+  ,"Arms" : {
+    "jimmy_pistol" : {"width" : 60, "height" : 22 },
+    "monster_pistol" : {"width" : 60, "height" : 26 },
+    "jimmy_rifle" : {"width" : 60, "height" : 24 },
+    "monster_rifle" : {"width" : 64, "height" : 22 },
+    "jimmy_sniper" : {"width" : 64, "height" : 22 },
+    "monster_sniper" : {"width" : 64, "height" : 22 },
+    "boss_gun" : {"width" : 120, "height" : 52 }
+  }
+  ,"Bullet" : {
+    "pistol" : {"width" : 22, "height" : 19 },
+    "rifle" : {"width" : 27, "height" : 13 },
+    "sniper" : {"width" : 46, "height" : 30 },
+    "boss" : {"width" : 46, "height" : 30 }
+  }
 }
