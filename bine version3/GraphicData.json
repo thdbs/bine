@@ -1,0 +1,17 @@
+{
+  "Jimmy" : {
+    "idle" : { "width" : 114, "height" : 94, "frame" : 12 },
+    "walk" : { "width" : 114, "height" : 94, "frame" : 6 },
+    "dash" : { "width" : 114, "height" : 94, "frame" : 2 },
+    "melee" : { "width" : 114, "height" : 94, "frame" : 7 },
+    "hit" : { "width" : 114, "height" : 94, "frame" : 2 },
+    "death" : { "width" : 114, "height" : 94, "frame" : 11 },
+    "teleport" : { "width" : 114, "height" : 94, "frame" : 8 }
+  }
+  ,"Turtle" : {
+    "idle" : { "width" : 114, "height" : 94, "frame" : 12 },
+    "walk" : { "width" : 114, "height" : 94, "frame" : 6 },
+    "hit" : { "width" : 114, "height" : 94, "frame" : 2 },
+    "death" : { "width" : 114, "height" : 94, "frame" : 14 }
+  }
+}
