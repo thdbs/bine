@@ -1,6 +1,7 @@
 __author__ = '성소윤'
 
 import Action
+import PlayerState
 
 class State:
     def enter(self, character):
@@ -51,7 +52,15 @@ class Melee(State):
         pass
 
     def update(self, character, frameTime):
+        character.activeAttack = True
+        Action.actionList['move'].update(character, frameTime)
         Action.actionList['increaseFrame'].update(character, frameTime)
+        character.meleeTimer += frameTime
+        if character.meleeTimer > character.meleeTime :
+            character.meleeTimer = 0
+            character.activeAttack = False
+            str = 'A.I' + '_' + 'idle'
+            character.ChangeState(PlayerState.stateList[str], 'idle')
 
     def render(self, character):
         pass
@@ -88,7 +97,7 @@ class Death(State):
         pass
 
 
-class TelePort(State):
+class Teleport(State):
     def enter(self, character):
         pass
 

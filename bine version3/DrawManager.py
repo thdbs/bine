@@ -8,6 +8,7 @@ GraphicData = {}
 CharacterGraphicList = {}
 StageGraphicList = {}
 ArmsGraphicList = {}
+EffectGraphicList = {}
 BackObjectGraphicList = {}
 BulletGraphicList = {}
 frame_Interval = 0.1
@@ -36,7 +37,7 @@ class Animation(Graphic):
                 else :
                     self.left_image.clip_draw(frame*self.width, 0, self.width, self.height, drawPointX, drawPointY )
             else :
-                self.image.clip_draw(frame*self.width, 0, self.width, self.height, drawPointX, drawPointY )
+                self.image.clip_draw(int(frame*self.width), 0, int(self.width), self.height, drawPointX, drawPointY )
 
 class StageImage(Graphic):
     def __init__(self, image):
@@ -64,7 +65,7 @@ class RotateImage(Graphic):
 
 
 def GenGraphicList() :
-    global CharacterGraphicList, StageGraphicList, ArmsGraphicList, BackObjectGraphicList, BulletGraphicList
+    global CharacterGraphicList, StageGraphicList, ArmsGraphicList, BackObjectGraphicList, BulletGraphicList, EffectGraphicList
     global GraphicList
 
     global GraphicData
@@ -127,6 +128,113 @@ def GenGraphicList() :
     CharacterGraphicList['Turtle_death'] = \
         Animation(Turtle_right, GraphicData["Turtle"]["death"]["width"],GraphicData["Turtle"]["death"]["height"]
                   ,GraphicData["Turtle"]["death"]["frame"], True, Turtle_left)
+    
+    DashDuck_right = load_image('Resource/Sprites/Monster/Dash_Duck/spr_duck_dash_right.png')
+    DashDuck_left = load_image('Resource/Sprites/Monster/Dash_Duck/spr_duck_dash_left.png')
+    CharacterGraphicList['DashDuck_dash'] = \
+        Animation(DashDuck_right, GraphicData["DashDuck"]["dash"]["width"],GraphicData["DashDuck"]["dash"]["height"]
+                  ,GraphicData["DashDuck"]["dash"]["frame"], True, DashDuck_left)
+    DashDuck_right = load_image('Resource/Sprites/Monster/Dash_Duck/spr_duck_death_right.png')
+    DashDuck_left = load_image('Resource/Sprites/Monster/Dash_Duck/spr_duck_death_left.png')
+    CharacterGraphicList['DashDuck_death'] = \
+        Animation(DashDuck_right, GraphicData["DashDuck"]["death"]["width"],GraphicData["DashDuck"]["death"]["height"]
+                  ,GraphicData["DashDuck"]["death"]["frame"], True, DashDuck_left)
+    DashDuck_right = load_image('Resource/Sprites/Monster/Dash_Duck/spr_duck_hit_right.png')
+    DashDuck_left = load_image('Resource/Sprites/Monster/Dash_Duck/spr_duck_hit_left.png')
+    CharacterGraphicList['DashDuck_hit'] = \
+        Animation(DashDuck_right, GraphicData["DashDuck"]["hit"]["width"],GraphicData["DashDuck"]["hit"]["height"]
+                  ,GraphicData["DashDuck"]["hit"]["frame"], True, DashDuck_left)
+    DashDuck_right = load_image('Resource/Sprites/Monster/Dash_Duck/spr_duck_idle_right.png')
+    DashDuck_left = load_image('Resource/Sprites/Monster/Dash_Duck/spr_duck_idle_left.png')
+    CharacterGraphicList['DashDuck_idle'] = \
+        Animation(DashDuck_right, GraphicData["DashDuck"]["idle"]["width"],GraphicData["DashDuck"]["idle"]["height"]
+                  ,GraphicData["DashDuck"]["idle"]["frame"], True, DashDuck_left)
+    DashDuck_right = load_image('Resource/Sprites/Monster/Dash_Duck/spr_duck_walk_right.png')
+    DashDuck_left = load_image('Resource/Sprites/Monster/Dash_Duck/spr_duck_walk_left.png')
+    CharacterGraphicList['DashDuck_walk'] = \
+        Animation(DashDuck_right, GraphicData["DashDuck"]["walk"]["width"],GraphicData["DashDuck"]["walk"]["height"]
+                  ,GraphicData["DashDuck"]["walk"]["frame"], True, DashDuck_left)
+    
+    SniperDuck_right = load_image('Resource/Sprites/Monster/Sniper_Duck/spr_duck3_death_right.png')
+    SniperDuck_left = load_image('Resource/Sprites/Monster/Sniper_Duck/spr_duck3_death_left.png')
+    CharacterGraphicList['SniperDuck_death'] = \
+        Animation(SniperDuck_right, GraphicData["SniperDuck"]["death"]["width"],GraphicData["SniperDuck"]["death"]["height"]
+                  ,GraphicData["SniperDuck"]["death"]["frame"], True, SniperDuck_left)
+    SniperDuck_right = load_image('Resource/Sprites/Monster/Sniper_Duck/spr_duck3_hit_right.png')
+    SniperDuck_left = load_image('Resource/Sprites/Monster/Sniper_Duck/spr_duck3_hit_left.png')
+    CharacterGraphicList['SniperDuck_hit'] = \
+        Animation(SniperDuck_right, GraphicData["SniperDuck"]["hit"]["width"],GraphicData["SniperDuck"]["hit"]["height"]
+                  ,GraphicData["SniperDuck"]["hit"]["frame"], True, SniperDuck_left)
+    SniperDuck_right = load_image('Resource/Sprites/Monster/Sniper_Duck/spr_duck3_idle_right.png')
+    SniperDuck_left = load_image('Resource/Sprites/Monster/Sniper_Duck/spr_duck3_idle_left.png')
+    CharacterGraphicList['SniperDuck_idle'] = \
+        Animation(SniperDuck_right, GraphicData["SniperDuck"]["idle"]["width"],GraphicData["SniperDuck"]["idle"]["height"]
+                  ,GraphicData["SniperDuck"]["idle"]["frame"], True, SniperDuck_left)
+    SniperDuck_right = load_image('Resource/Sprites/Monster/Sniper_Duck/spr_duck3_walk_right.png')
+    SniperDuck_left = load_image('Resource/Sprites/Monster/Sniper_Duck/spr_duck3_walk_left.png')
+    CharacterGraphicList['SniperDuck_walk'] = \
+        Animation(SniperDuck_right, GraphicData["SniperDuck"]["walk"]["width"],GraphicData["SniperDuck"]["walk"]["height"]
+                  ,GraphicData["SniperDuck"]["walk"]["frame"], True, SniperDuck_left)
+    
+    Kaze_right = load_image('Resource/Sprites/Monster/Kaze/spr_kamikaze_dash_right.png')
+    Kaze_left = load_image('Resource/Sprites/Monster/Kaze/spr_kamikaze_dash_left.png')
+    CharacterGraphicList['Kaze_dash'] = \
+        Animation(Kaze_right, GraphicData["Kaze"]["dash"]["width"],GraphicData["Kaze"]["dash"]["height"]
+                  ,GraphicData["Kaze"]["dash"]["frame"], True, Kaze_left)
+    Kaze_right = load_image('Resource/Sprites/Monster/Kaze/spr_kamikaze_death_right.png')
+    Kaze_left = load_image('Resource/Sprites/Monster/Kaze/spr_kamikaze_death_left.png')
+    CharacterGraphicList['Kaze_death'] = \
+        Animation(Kaze_right, GraphicData["Kaze"]["death"]["width"],GraphicData["Kaze"]["death"]["height"]
+                  ,GraphicData["Kaze"]["death"]["frame"], True, Kaze_left)
+    Kaze_right = load_image('Resource/Sprites/Monster/Kaze/spr_kamikaze_hit_right.png')
+    Kaze_left = load_image('Resource/Sprites/Monster/Kaze/spr_kamikaze_hit_left.png')
+    CharacterGraphicList['Kaze_hit'] = \
+        Animation(Kaze_right, GraphicData["Kaze"]["hit"]["width"],GraphicData["Kaze"]["hit"]["height"]
+                  ,GraphicData["Kaze"]["hit"]["frame"], True, Kaze_left)
+    Kaze_right = load_image('Resource/Sprites/Monster/Kaze/spr_kamikaze_idle_right.png')
+    Kaze_left = load_image('Resource/Sprites/Monster/Kaze/spr_kamikaze_idle_left.png')
+    CharacterGraphicList['Kaze_idle'] = \
+        Animation(Kaze_right, GraphicData["Kaze"]["idle"]["width"],GraphicData["Kaze"]["idle"]["height"]
+                  ,GraphicData["Kaze"]["idle"]["frame"], True, Kaze_left)
+    Kaze_right = load_image('Resource/Sprites/Monster/Kaze/spr_kamikaze_walk_right.png')
+    Kaze_left = load_image('Resource/Sprites/Monster/Kaze/spr_kamikaze_walk_left.png')
+    CharacterGraphicList['Kaze_walk'] = \
+        Animation(Kaze_right, GraphicData["Kaze"]["walk"]["width"],GraphicData["Kaze"]["walk"]["height"]
+                  ,GraphicData["Kaze"]["walk"]["frame"], True, Kaze_left)
+    Kaze_right = load_image('Resource/Sprites/Monster/Kaze/spr_kamikaze_melee_right.png')
+    Kaze_left = load_image('Resource/Sprites/Monster/Kaze/spr_kamikaze_melee_left.png')
+    CharacterGraphicList['Kaze_melee'] = \
+        Animation(Kaze_right, GraphicData["Kaze"]["melee"]["width"],GraphicData["Kaze"]["melee"]["height"]
+                  ,GraphicData["Kaze"]["melee"]["frame"], True, Kaze_left)
+    
+    Boss_right = load_image('Resource/Sprites/Monster/Boss/spr_boss_death_right.png')
+    Boss_left = load_image('Resource/Sprites/Monster/Boss/spr_boss_death_left.png')
+    CharacterGraphicList['Boss_death'] = \
+        Animation(Boss_right, GraphicData["Boss"]["death"]["width"],GraphicData["Boss"]["death"]["height"]
+                  ,GraphicData["Boss"]["death"]["frame"], True, Boss_left)
+    Boss_right = load_image('Resource/Sprites/Monster/Boss/spr_boss_hit_right.png')
+    Boss_left = load_image('Resource/Sprites/Monster/Boss/spr_boss_hit_left.png')
+    CharacterGraphicList['Boss_hit'] = \
+        Animation(Boss_right, GraphicData["Boss"]["hit"]["width"],GraphicData["Boss"]["hit"]["height"]
+                  ,GraphicData["Boss"]["hit"]["frame"], True, Boss_left)
+    Boss_right = load_image('Resource/Sprites/Monster/Boss/spr_boss_idle_right.png')
+    Boss_left = load_image('Resource/Sprites/Monster/Boss/spr_boss_idle_left.png')
+    CharacterGraphicList['Boss_idle'] = \
+        Animation(Boss_right, GraphicData["Boss"]["idle"]["width"],GraphicData["Boss"]["idle"]["height"]
+                  ,GraphicData["Boss"]["idle"]["frame"], True, Boss_left)
+    Boss_right = load_image('Resource/Sprites/Monster/Boss/spr_boss_walk_right.png')
+    Boss_left = load_image('Resource/Sprites/Monster/Boss/spr_boss_walk_left.png')
+    CharacterGraphicList['Boss_walk'] = \
+        Animation(Boss_right, GraphicData["Boss"]["walk"]["width"],GraphicData["Boss"]["walk"]["height"]
+                  ,GraphicData["Boss"]["walk"]["frame"], True, Boss_left)
+    Boss_right = load_image('Resource/Sprites/Monster/Boss/spr_boss_egg_crack.png')
+    CharacterGraphicList['Boss_eggCrack'] = \
+        Animation(Boss_right, GraphicData["Boss"]["eggCrack"]["width"],GraphicData["Boss"]["eggCrack"]["height"]
+                  ,GraphicData["Boss"]["eggCrack"]["frame"])
+    Boss_right = load_image('Resource/Sprites/Monster/Boss/spr_boss_egg_start.png')
+    CharacterGraphicList['Boss_eggStart'] = \
+        Animation(Boss_right, GraphicData["Boss"]["eggStart"]["width"],GraphicData["Boss"]["eggStart"]["height"]
+                  ,GraphicData["Boss"]["eggStart"]["frame"])
 
     #Stage Image Load
     stage = load_image('Resource/Sprites/Stage/stage1_room1.png')
@@ -187,3 +295,8 @@ def GenGraphicList() :
     bullet_left = load_image('Resource/Sprites/Weapon/spr_boss_gun_bullet_left.png')
     BulletGraphicList['boss'] = RotateImage(bullet_left, bullet_right, GraphicData['Bullet']['boss']['width'],
                                                  GraphicData['Bullet']['boss']['height'])
+
+    #load Effect
+    image = load_image('Resource/Sprites/Effect/spr_fire_pixel.png')
+    EffectGraphicList['fire'] = \
+        Animation(image, image.w/15 ,image.h, 15)

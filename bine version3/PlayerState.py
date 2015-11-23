@@ -5,6 +5,7 @@ import Action
 import DrawManager
 import InputManager
 import Camera
+from AIstate import *
 
 stateList = {}
 def GenStateList() :
@@ -12,6 +13,13 @@ def GenStateList() :
     stateList['Jimmy_walk'] = PlayerWalk()
     stateList['Jimmy_idle'] = PlayerIdle()
     stateList['Jimmy_dash'] = PlayerDash()
+    stateList['Jimmy_melee'] = PlayerMelee()
+    stateList["A.I_idle"] = AiIdle()
+    stateList["A.I_melee"] = AiMelee()
+    stateList["A.I_walk_dash"] = AiWalkDash()
+    stateList["A.I_walk"] = AiWalk()
+    stateList["A.I_dash"] = AiDash()
+    stateList["A.I_melee"] = AiMelee()
 
 
 class PlayerIdle(Idle):
@@ -68,3 +76,13 @@ class PlayerDash(Dash):
         else :
             character.side = False
         DrawManager.CharacterGraphicList['Jimmy_dash'].Draw(character.x, character.y, character.frame, character.side )
+
+
+class PlayerMelee(Melee):
+    def update(self, player, frameTime):
+        Melee.update(self,player, frameTime)
+        Camera.SetPos(player.x, player.y)
+        if not player.activeAttack  : player.vx , player.vy = 0, 0
+
+    def render(self, character):
+        DrawManager.CharacterGraphicList['Jimmy_melee'].Draw(character.x, character.y, character.frame, character.side)

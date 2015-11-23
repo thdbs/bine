@@ -13,7 +13,7 @@ def GenBulletData() :
     with open('BulletData.json') as f:
         BulletData = json.load(f)
 
-def Rener():
+def Render():
     global  BulletList
     for i in BulletList :
         i.Render()
@@ -49,7 +49,6 @@ class Bullet:
         self.y += sin(self.radian)*self.speed*frameTime
         self.speed += self.speedRate*frameTime
         self.travel += sqrt((self.x-x)*(self.x -x) + (self.y - y)*(self.y - y))
-        print(self.travel)
         self.CheckAlive()
 
     def Render(self):

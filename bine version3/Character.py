@@ -6,6 +6,7 @@ import InputManager
 import random
 import PlayerState
 from Arms import *
+import Action
 
 character_data = {}
 
@@ -57,6 +58,7 @@ class Jimmy(Character):
     WALK_SPEED_PPS = None
     DASH_SPEED_PPS = None
     dashTime = None
+    meleeTime = None
     def __init__(self, x, y):
         if not Jimmy.created:
             Jimmy.created = True
@@ -67,26 +69,34 @@ class Jimmy(Character):
             Jimmy.WALK_SPEED_PPS = character_data['Jimmy']['walkSpeedPPS']
             Jimmy.DASH_SPEED_PPS = character_data['Jimmy']['dashSpeedPPS']
             Jimmy.dashTime = character_data['Jimmy']['dashTime']
+            Jimmy.meleeTime = character_data['Jimmy']['meleeTime']
         Character.__init__(self, x, y, Jimmy.maxHealth, Jimmy.maxShield)
         self.state = PlayerState.stateList["Jimmy_idle"]
         self.dash = False
         self.dashTimer = 0
+        self.ArmsNameList = ['Pistol', 'Rifle', 'Sniper']
+        self.curArm = 1
         self.ArmsList = {}
-        self.curArm = 'pistol'
-        self.ArmsList[self.curArm] = SniperGun('Jimmy')
+        self.ArmsList['Sniper'] = SniperGun('Jimmy')
+        self.ArmsList['Rifle'] = Rifle('Jimmy')
+        self.ArmsList['Pistol'] = Pistol('Jimmy')
         self.shot = False
+        self.meleeTimer = 0
+        self.activeAttack = False
 
     def Update(self, frameTime):
         self.PrcessInput()
         Character.Update(self, frameTime)
-        if self.shot :  self.ArmsList[self.curArm].Shoot(self,InputManager.mouseX + Camera.x - self.x, InputManager.mouseY + Camera.y - self.y - self.hCollisionBox/2 )
+        if self.shot :
+            self.ArmsList[self.ArmsNameList[self.curArm]].Shoot(self,InputManager.mouseX + Camera.x - self.x, InputManager.mouseY + Camera.y - self.y - self.hCollisionBox/2 )
 
     def Render(self):
         Character.Render(self)
-        self.ArmsList[self.curArm].Render(self, InputManager.mouseX + Camera.x - self.x, InputManager.mouseY + Camera.y - self.y - self.hCollisionBox/2, InputManager.mouseX + Camera.x,InputManager.mouseY + Camera.y )
+        if not self.activeAttack : self.ArmsList[self.ArmsNameList[self.curArm]].Render(self, InputManager.mouseX + Camera.x - self.x, InputManager.mouseY + Camera.y - self.y - self.hCollisionBox/2, InputManager.mouseX + Camera.x,InputManager.mouseY + Camera.y )
+        else : self.ArmsList[self.ArmsNameList[self.curArm]].Render(self, self.vx , self.vy - 100, self.x, self.y + self.hCollisionBox/2 )
 
     def PrcessInput(self):
-        if not self.dash :
+        if not self.dash and not self.activeAttack :
             if (InputManager.GetKeyState(SDLK_w) == InputManager.GetKeyState(SDLK_s)) :
                 self.vy = 0
             elif InputManager.GetKeyState(SDLK_w):
@@ -103,5 +113,13 @@ class Jimmy(Character):
                 self.dash = True
                 self.vx = self.vx * Jimmy.DASH_SPEED_PPS
                 self.vy = self.vy * Jimmy.DASH_SPEED_PPS
+            if (InputManager.GetKeyState(SDLK_f)) :
+                dirx = InputManager.mouseX + Camera.x - self.x
+                diry = InputManager.mouseY + Camera.y - self.y - self.hCollisionBox/2
+                dirx, diry = Action.Nomalization(dirx, diry)
+                self.vx = dirx * Jimmy.WALK_SPEED_PPS
+                self.vy = diry * Jimmy.WALK_SPEED_PPS
+                self.ChangeState(PlayerState.stateList['Jimmy_melee'], 'melee')
+        if InputManager.GetKeyState(SDLK_q) : self.curArm = (self.curArm + 1) %3
         if InputManager.LButton : self.shot = True
         else : self.shot = False

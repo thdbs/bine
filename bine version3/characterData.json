@@ -2,5 +2,32 @@
   "Jimmy" : { "name" : "Jimmy", "maxHealth" : 280, "maxShield" : 60
   , "collisionBoxWidth" : 50, "collisionBoxHeight" : 80
   , "walkSpeedPPS" : 300, "dashSpeedPPS" : 3, "dashTime" : 0.3
+  , "meleeTime" : 0.15
+  }
+  ,"Turtle" : { "name" : "Turtle", "maxHealth" : 100, "maxShield" : 0
+  , "collisionBoxWidth" : 50, "collisionBoxHeight" : 74
+  , "walkSpeedPPS" : 300
+  , "detectionRange" : 700, "attackRange" : 300 , "attackTime" : 0.5
+  }
+  ,"DashDuck" : { "name" : "DashDuck", "maxHealth" : 100, "maxShield" : 60
+  , "collisionBoxWidth" : 35, "collisionBoxHeight" : 64
+  , "walkSpeedPPS" : 300, "dashSpeedPPS" : 3, "dashTime" : 0.3
+  , "detectionRange" : 700, "attackRange" : 300, "attackTime" : 0.1
+  }
+  ,"SniperDuck" : { "name" : "SniperDuck", "maxHealth" : 150, "maxShield" : 60
+  , "collisionBoxWidth" : 35, "collisionBoxHeight" : 70
+  , "walkSpeedPPS" : 300
+  , "detectionRange" : 1100, "attackRange" : 1000, "attackTime" : 3.0
+  }
+  ,"Kaze" : { "name" : "Kaze", "maxHealth" : 200, "maxShield" : 0
+  , "collisionBoxWidth" : 45, "collisionBoxHeight" : 40
+  , "walkSpeedPPS" : 500, "dashSpeedPPS" : 2, "dashTime" : 0.3, "attackTime" : 1.0
+  , "meleeTime" : 0.3
+  , "detectionRange" : 700, "attackRange" : 100
+  }
+  ,"Boss" : { "name" : "Boss", "maxHealth" : 500, "maxShield" : 150
+  , "collisionBoxWidth" : 70, "collisionBoxHeight" : 108
+  , "walkSpeedPPS" : 300
+  , "detectionRange" : 900, "attackRange" : 800, "attackTime" : 0.3
   }
 }

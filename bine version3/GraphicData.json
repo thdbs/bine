@@ -14,6 +14,35 @@
     "hit" : { "width" : 114, "height" : 94, "frame" : 2 },
     "death" : { "width" : 114, "height" : 94, "frame" : 14 }
   }
+  ,"DashDuck" : {
+    "idle" : { "width" : 114, "height" : 94, "frame" : 7 },
+    "walk" : { "width" : 114, "height" : 94, "frame" : 13 },
+    "hit" : { "width" : 114, "height" : 94, "frame" : 2 },
+    "death" : { "width" : 114, "height" : 94, "frame" : 11 },
+    "dash" : { "width" : 114, "height" : 94, "frame" : 2 }
+  }
+  ,"Kaze" : {
+    "idle" : { "width" : 114, "height" : 94, "frame" : 16 },
+    "walk" : { "width" : 114, "height" : 94, "frame" : 8 },
+    "hit" : { "width" : 114, "height" : 94, "frame" : 2 },
+    "death" : { "width" : 114, "height" : 94, "frame" : 8 },
+    "dash" : { "width" : 114, "height" : 94, "frame" : 8 },
+    "melee" : { "width" : 114, "height" : 94, "frame" : 8 }
+  }
+  ,"SniperDuck" : {
+    "idle" : { "width" : 114, "height" : 94, "frame" : 9 },
+    "walk" : { "width" : 114, "height" : 94, "frame" : 6 },
+    "hit" : { "width" : 114, "height" : 94, "frame" : 2 },
+    "death" : { "width" : 114, "height" : 94, "frame" : 11 }
+  }
+  ,"Boss" : {
+    "idle" : { "width" : 228, "height" : 188, "frame" : 14 },
+    "walk" : { "width" : 228, "height" : 188, "frame" : 6 },
+    "hit" : { "width" : 228, "height" : 188, "frame" : 2 },
+    "death" : { "width" : 228, "height" : 188, "frame" : 13 },
+    "eggStart" : { "width" : 288, "height" : 188, "frame" : 10 },
+    "eggCrack" : { "width" : 288, "height" : 188, "frame" : 21 }
+  }
   ,"Arms" : {
     "jimmy_pistol" : {"width" : 60, "height" : 22 },
     "monster_pistol" : {"width" : 60, "height" : 26 },
