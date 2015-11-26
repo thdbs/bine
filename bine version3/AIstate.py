@@ -91,6 +91,9 @@ class AiDash(Dash):
 class AiMelee(Melee):
     def update(self, character, frameTime):
         Melee.update(self, character, frameTime)
+        if not character.activeAttack:
+            str = 'A.I' + '_' + 'idle'
+            character.ChangeState(PlayerState.stateList[str], 'idle')
 
     def render(self, character):
         str = character.name + '_' + character.stateName

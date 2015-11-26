@@ -1,17 +1,19 @@
 __author__ = '성소윤'
 
-import StageManager
+
 import Character
 import DrawManager
 from math import *
+import StageManager
 
 actionList = {}
-maxSpeed = 80    #revise 동기화 문제고려해서
+maxSpeed = 80    #동기화 문제고려해서 수정
 
 def GenAction():
     global actionList
     actionList['move'] = Move()
     actionList['increaseFrame'] = IncreaseFrame()
+    actionList['increaseFrameOnce'] = IncreaseFrameOnce()
     actionList['observation'] = Observation()
     actionList['Trace'] = Trace()
 
@@ -51,6 +53,18 @@ class IncreaseFrame(Action):
             character.frameTimer = 0
             sprName = character.name + '_' + character.stateName
             character.frame = (character.frame + increaseRate) % DrawManager.CharacterGraphicList[sprName].frame
+
+class IncreaseFrameOnce(Action):
+    def update(self, character, frameTime):
+        character.frameTimer += frameTime
+        if(character.frameTimer >= DrawManager.frame_Interval):
+            increaseRate = int(character.frameTimer / DrawManager.frame_Interval)
+            character.frameTimer = 0
+            sprName = character.name + '_' + character.stateName
+            character.frame = (character.frame + increaseRate)
+            if character.frame > DrawManager.CharacterGraphicList[sprName].frame :
+                return True
+            return False
 
 
 class Observation(Action):

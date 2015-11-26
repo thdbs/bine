@@ -2,6 +2,7 @@ __author__ = '성소윤'
 
 import Action
 import PlayerState
+import DrawManager
 
 class State:
     def enter(self, character):
@@ -59,8 +60,6 @@ class Melee(State):
         if character.meleeTimer > character.meleeTime :
             character.meleeTimer = 0
             character.activeAttack = False
-            str = 'A.I' + '_' + 'idle'
-            character.ChangeState(PlayerState.stateList[str], 'idle')
 
     def render(self, character):
         pass
@@ -87,11 +86,14 @@ class Death(State):
     def enter(self, character):
         pass
 
-    def update(self, character):
-        pass
+    def update(self, character, frameTime):
+        if Action.actionList['increaseFrameOnce'].update(character, frameTime) :
+            character.alive = False
 
     def render(self, character):
-        pass
+        if character.alive:
+            str = character.name + '_' + character.stateName
+            DrawManager.CharacterGraphicList[str].Draw(character.x, character.y, character.frame, character.side )
 
     def Exit(self, character):
         pass

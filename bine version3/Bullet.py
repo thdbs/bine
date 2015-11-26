@@ -35,13 +35,14 @@ def AddBullet(bullet):
     BulletList.append(bullet)
 
 class Bullet:
-    def __init__(self, x, y, rad, side):
+    def __init__(self, x, y, rad, side, ally):
         self.x = x
         self.y = y
         self.radian = rad
         self.travel = 0
         self.alive = True
         self.side = side
+        self.ally = ally
 
     def Update(self,frameTime):
         x, y = self.x, self.y
@@ -65,9 +66,10 @@ class PistolBullet(Bullet):
     speed = None
     speedRate = None
     maximumRange = None
+    hit = None
 
-    def __init__(self, x, y, rad, side):
-        Bullet.__init__(self, x, y, rad, side)
+    def __init__(self, x, y, rad, side, ally):
+        Bullet.__init__(self, x, y, rad, side, ally)
         if not PistolBullet.created :
             PistolBullet.created = True
             PistolBullet.name = 'pistol'
@@ -76,6 +78,7 @@ class PistolBullet(Bullet):
             PistolBullet.wCollisionBox = BulletData['Pistol']['collisionBoxWidth']
             PistolBullet.hCollisionBox = BulletData['Pistol']['collisionBoxHeight']
             PistolBullet.maximumRange = BulletData['Pistol']['maximumRange']
+            PistolBullet.hit = BulletData['Pistol']['hit']
 
 
 class RifleBullet(Bullet):
@@ -85,9 +88,10 @@ class RifleBullet(Bullet):
     speed = None
     speedRate = None
     maximumRange = None
+    hit = None
 
-    def __init__(self, x, y, rad, side):
-        Bullet.__init__(self, x, y, rad, side)
+    def __init__(self, x, y, rad, side, ally):
+        Bullet.__init__(self, x, y, rad, side, ally)
         if not RifleBullet.created :
             RifleBullet.created = True
             RifleBullet.name = 'rifle'
@@ -96,6 +100,7 @@ class RifleBullet(Bullet):
             RifleBullet.wCollisionBox = BulletData['Rifle']['collisionBoxWidth']
             RifleBullet.hCollisionBox = BulletData['Rifle']['collisionBoxHeight']
             RifleBullet.maximumRange = BulletData['Rifle']['maximumRange']
+            RifleBullet.hit = BulletData['Rifle']['hit']
 
 class SniperBullet(Bullet):
     created = False
@@ -104,9 +109,10 @@ class SniperBullet(Bullet):
     speed = None
     speedRate = None
     maximumRange = None
+    hit = None
 
-    def __init__(self, x, y, rad, side):
-        Bullet.__init__(self, x, y, rad, side)
+    def __init__(self, x, y, rad, side, ally):
+        Bullet.__init__(self, x, y, rad, side, ally)
         if not SniperBullet.created :
             SniperBullet.created = True
             SniperBullet.name = 'sniper'
@@ -115,6 +121,7 @@ class SniperBullet(Bullet):
             SniperBullet.wCollisionBox = BulletData['Sniper']['collisionBoxWidth']
             SniperBullet.hCollisionBox = BulletData['Sniper']['collisionBoxHeight']
             SniperBullet.maximumRange = BulletData['Sniper']['maximumRange']
+            SniperBullet.hit = BulletData['Sniper']['hit']
 
 
 class BossBullet(Bullet):
@@ -124,9 +131,10 @@ class BossBullet(Bullet):
     speed = None
     speedRate = None
     maximumRange = None
+    hit = None
 
-    def __init__(self, x, y, rad, side):
-        Bullet.__init__(self, x, y, rad, side)
+    def __init__(self, x, y, rad, side, ally):
+        Bullet.__init__(self, x, y, rad, side, ally)
         if not BossBullet.created :
             BossBullet.created = True
             BossBullet.name = 'boss'
@@ -135,3 +143,4 @@ class BossBullet(Bullet):
             BossBullet.wCollisionBox = BulletData['Boss']['collisionBoxWidth']
             BossBullet.hCollisionBox = BulletData['Boss']['collisionBoxHeight']
             BossBullet.maximumRange = BulletData['Boss']['maximumRange']
+            BossBullet.hit = BulletData['Boss']['hit']

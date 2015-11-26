@@ -20,6 +20,7 @@ def GenStateList() :
     stateList["A.I_walk"] = AiWalk()
     stateList["A.I_dash"] = AiDash()
     stateList["A.I_melee"] = AiMelee()
+    stateList["death"] = Death()
 
 
 class PlayerIdle(Idle):
@@ -82,7 +83,9 @@ class PlayerMelee(Melee):
     def update(self, player, frameTime):
         Melee.update(self,player, frameTime)
         Camera.SetPos(player.x, player.y)
-        if not player.activeAttack  : player.vx , player.vy = 0, 0
+        if not player.activeAttack  :
+            player.vx , player.vy = 0, 0
+            player.ChangeState(stateList['Jimmy_idle'], 'idle')
 
     def render(self, character):
         DrawManager.CharacterGraphicList['Jimmy_melee'].Draw(character.x, character.y, character.frame, character.side)

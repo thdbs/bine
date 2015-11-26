@@ -10,15 +10,10 @@ from pico2d import *
 StageDataList = {}
 curStage = None
 MonsterList = {}
-fireFrame, frameTimer = 0,0
 
-bgm = None
 
 def GenStageData() :
-    global StageDataList, curStage, MonsterList, bgm
-    bgm = load_music('bgm_stage3.mp3')
-    bgm.set_volume(64)
-    bgm.repeat_play()
+    global StageDataList, curStage, MonsterList
     curStage = 'stage1_1'
     with open('StageData.json') as f:
         StageDataList = json.load(f)
@@ -70,38 +65,20 @@ def GenStageData() :
     MonsterList['stage2_boss'] = []
     MonsterList['stage2_exit'] = []
 
-def DrawFire():
-    global fireFrame, frameTimer
-    DrawManager.EffectGraphicList['fire'].Draw(Camera.x + 152  ,Camera.y, fireFrame)
-    DrawManager.EffectGraphicList['fire'].Draw(Camera.x + 152  ,Camera.y+300, (fireFrame+ 10)%15)
-    DrawManager.EffectGraphicList['fire'].Draw(Camera.x + 152  ,Camera.y+100, (fireFrame+ 2)%15)
-    DrawManager.EffectGraphicList['fire'].Draw(Camera.x + 152  ,Camera.y-100, (fireFrame+ 5)%15)
-    DrawManager.EffectGraphicList['fire'].Draw(Camera.x + 152  ,Camera.y-200, (fireFrame+ 8)%15)
-    frameTimer += 1
-    if frameTimer >= 10 :
-        frameTimer = 0
-        fireFrame = (fireFrame+1)%15
 
-def ChangeState(stageName, player):
-    global curStage
-    curStage = stageName
-    player.x = StageDataList[curStage]['inTeleportX']
-    player.y = StageDataList[curStage]['inTeleportY']
-    Camera.SetPos(player.x, player.y)
+
 
 def Render():
     global curStage, MonsterList
     DrawManager.StageGraphicList[curStage].Draw()
     for i in MonsterList[curStage] :
             i.Render()
-    if curStage == 'stage2_exit' :  DrawFire()
 
 
 def Update(frameTime):
     global curStage, MonsterList
     for i in MonsterList[curStage] :
         i.Update(frameTime)
-    DrawFire()
 
 def GetMapDate(row, col):
     global StageDataList, curStage

@@ -8,7 +8,7 @@ import Character
 class Monster(Character.Character):
     def Update(self, frameTime):
         Character.Character.Update(self, frameTime)
-        if self.shot and self.attackTimer == 0 :
+        if self.shot and self.attackTimer == 0  and not self.death:
             self.Arm.Shoot(self, self.target.x - self.x, (self.target.y + self.target.hCollisionBox/2) - (self.y + self.hCollisionBox/2) )
         self.attackTimer += frameTime
         if self.attackTimer > self.attackTime :
@@ -16,7 +16,7 @@ class Monster(Character.Character):
 
     def Render(self):
         Character.Character.Render(self)
-        self.Arm.Render(self, self.target.x - self.x, (self.target.y + self.target.hCollisionBox/2) - (self.y + self.hCollisionBox/2), self.target.x, (self.target.y + self.target.hCollisionBox/2))
+        if not self.death : self.Arm.Render(self, self.target.x - self.x, (self.target.y + self.target.hCollisionBox/2) - (self.y + self.hCollisionBox/2), self.target.x, (self.target.y + self.target.hCollisionBox/2))
 
 
 
@@ -32,6 +32,7 @@ class Turtle(Monster):
     shooter = True
     availDash = False
     attackTime = None
+    ally = False
     def __init__(self, x, y, target) :
         if not Turtle.created:
             Turtle.created = True
@@ -64,6 +65,7 @@ class SniperDuck(Monster):
     shooter = True
     availDash = False
     attackTime = None
+    ally = False
     def __init__(self, x, y, target):
         if not SniperDuck.created:
             SniperDuck.created = True
@@ -96,6 +98,7 @@ class Boss(Monster):
     shooter = True
     availDash = False
     attackTime = None
+    ally = False
     def __init__(self, x, y, target):
         if not Boss.created:
             Boss.created = True
@@ -132,6 +135,7 @@ class DashDuck(Monster):
     shooter = True
     availDash = True
     attackTime = None
+    ally = False
     def __init__(self, x, y, target):
         if not DashDuck.created:
             DashDuck.created = True
@@ -172,6 +176,8 @@ class Kaze(Monster):
     shooter = False
     availDash = True
     attackTime = None
+    attack = None
+    ally = False
     def __init__(self, x, y, target):
         if not Kaze.created:
             Kaze.created = True
@@ -186,6 +192,7 @@ class Kaze(Monster):
             Kaze.attackRange = Character.character_data['Kaze']['attackRange']
             Kaze.meleeTime = Character.character_data['Kaze']['meleeTime']
             Kaze.attackTime = Character.character_data['Kaze']['attackTime']
+            Kaze.attack = Character.character_data['Kaze']['attack']
         Character.Character.__init__(self, x, y, Kaze.maxHealth, Kaze.maxShield)
         self.target = target
         self.state = PlayerState.stateList["A.I_idle"]

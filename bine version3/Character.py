@@ -26,13 +26,13 @@ class Character:
         self.frame, self.frameTimer = 0, 0
         self.stateName = 'idle'
         self.hit = False
+        self.alive = True
+        self.death = False
         if random.randint(0, 100) < 50 : self.side = True
         else : self.side = False
 
     def Update(self, frameTime):
         self.state.update(self, frameTime)
-        if not self.hit :
-            Character.CheckHit(self)
 
     def Render(self):
         self.state.render(self)
@@ -45,8 +45,49 @@ class Character:
         self.stateName = stateName
         self.frame, self.frameTimer = 0, 0
 
-    def CheckHit(self):
-        pass
+
+    def CollisionCheck_Bullet(self, bullet):
+        if not self.death:
+            if self.x - self.wCollisionBox/2 < bullet.x + bullet.wCollisionBox/2 and self.x + self.wCollisionBox/2 > bullet.x - bullet.wCollisionBox/2 and \
+                   self.y < bullet.y + bullet.hCollisionBox/2 and self.y + self.hCollisionBox > bullet.y - bullet.hCollisionBox/2 and self.ally != bullet.ally:
+                if self.shield >0:
+                    self.shield -= bullet.hit
+                    self.shield = max(self.shield, 0)
+                else:
+                    self.health -= bullet.hit
+                    self.health = max(self.health, 0)
+                    if self.health <= 0 :
+                        self.ChangeState(PlayerState.stateList['death'], 'death')
+                        self.death = True
+                bullet.alive = False
+                return(True)
+        return(False)
+    
+    def CollisionCheck_Character(self, character):
+        if self.x - self.wCollisionBox/2 < character.x + character.wCollisionBox/2 and self.x + self.wCollisionBox/2 > character.x - character.wCollisionBox/2 and \
+            self.y < character.y + character.hCollisionBox and self.y + self.hCollisionBox > character.y :
+            if character.stateName == 'melee':
+                if self.shield > 0:
+                    self.shield -= character.attack
+                    self.shield = max(self.shield, 0)
+                else:
+                    self.health -= character.attack
+                    self.health = max(self.health, 0)
+                    if self.health <= 0 :
+                        self.ChangeState(PlayerState.stateList['death'], 'death')
+                        self.death = True
+            if self.stateName == 'melee':
+                if character.shield > 0:
+                    character.shield -= self.attack
+                    character.shield = max(character.shield, 0)
+                else:
+                    character.health -= self.attack
+                    character.health = max(character.health, 0)
+                    if character.health <= 0 :
+                        character.ChangeState(PlayerState.stateList['death'], 'death')
+                        character.death = True
+            return(True)
+        return(False)
 
 
 class Jimmy(Character):
@@ -59,6 +100,8 @@ class Jimmy(Character):
     DASH_SPEED_PPS = None
     dashTime = None
     meleeTime = None
+    attack = None
+    ally = True
     def __init__(self, x, y):
         if not Jimmy.created:
             Jimmy.created = True
@@ -70,6 +113,7 @@ class Jimmy(Character):
             Jimmy.DASH_SPEED_PPS = character_data['Jimmy']['dashSpeedPPS']
             Jimmy.dashTime = character_data['Jimmy']['dashTime']
             Jimmy.meleeTime = character_data['Jimmy']['meleeTime']
+            Jimmy.attack = character_data['Jimmy']['attack']
         Character.__init__(self, x, y, Jimmy.maxHealth, Jimmy.maxShield)
         self.state = PlayerState.stateList["Jimmy_idle"]
         self.dash = False
@@ -87,13 +131,13 @@ class Jimmy(Character):
     def Update(self, frameTime):
         self.PrcessInput()
         Character.Update(self, frameTime)
-        if self.shot :
+        if self.shot and not self.death :
             self.ArmsList[self.ArmsNameList[self.curArm]].Shoot(self,InputManager.mouseX + Camera.x - self.x, InputManager.mouseY + Camera.y - self.y - self.hCollisionBox/2 )
 
     def Render(self):
         Character.Render(self)
-        if not self.activeAttack : self.ArmsList[self.ArmsNameList[self.curArm]].Render(self, InputManager.mouseX + Camera.x - self.x, InputManager.mouseY + Camera.y - self.y - self.hCollisionBox/2, InputManager.mouseX + Camera.x,InputManager.mouseY + Camera.y )
-        else : self.ArmsList[self.ArmsNameList[self.curArm]].Render(self, self.vx , self.vy - 100, self.x, self.y + self.hCollisionBox/2 )
+        if not self.activeAttack and not self.death : self.ArmsList[self.ArmsNameList[self.curArm]].Render(self, InputManager.mouseX + Camera.x - self.x, InputManager.mouseY + Camera.y - self.y - self.hCollisionBox/2, InputManager.mouseX + Camera.x,InputManager.mouseY + Camera.y )
+        elif self.activeAttack and not self.death : self.ArmsList[self.ArmsNameList[self.curArm]].Render(self, self.vx , self.vy - 100, self.x, self.y + self.hCollisionBox/2 )
 
     def PrcessInput(self):
         if not self.dash and not self.activeAttack :
@@ -113,7 +157,7 @@ class Jimmy(Character):
                 self.dash = True
                 self.vx = self.vx * Jimmy.DASH_SPEED_PPS
                 self.vy = self.vy * Jimmy.DASH_SPEED_PPS
-            if (InputManager.GetKeyState(SDLK_f)) :
+            if (InputManager.GetKeyState(SDLK_f)) and not self.death :
                 dirx = InputManager.mouseX + Camera.x - self.x
                 diry = InputManager.mouseY + Camera.y - self.y - self.hCollisionBox/2
                 dirx, diry = Action.Nomalization(dirx, diry)

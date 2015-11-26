@@ -2,7 +2,7 @@
   "Jimmy" : { "name" : "Jimmy", "maxHealth" : 280, "maxShield" : 60
   , "collisionBoxWidth" : 50, "collisionBoxHeight" : 80
   , "walkSpeedPPS" : 300, "dashSpeedPPS" : 3, "dashTime" : 0.3
-  , "meleeTime" : 0.15
+  , "meleeTime" : 0.15, "attack": 40
   }
   ,"Turtle" : { "name" : "Turtle", "maxHealth" : 100, "maxShield" : 0
   , "collisionBoxWidth" : 50, "collisionBoxHeight" : 74
@@ -22,7 +22,7 @@
   ,"Kaze" : { "name" : "Kaze", "maxHealth" : 200, "maxShield" : 0
   , "collisionBoxWidth" : 45, "collisionBoxHeight" : 40
   , "walkSpeedPPS" : 500, "dashSpeedPPS" : 2, "dashTime" : 0.3, "attackTime" : 1.0
-  , "meleeTime" : 0.3
+  , "meleeTime" : 0.3, "attack": 25
   , "detectionRange" : 700, "attackRange" : 100
   }
   ,"Boss" : { "name" : "Boss", "maxHealth" : 500, "maxShield" : 150

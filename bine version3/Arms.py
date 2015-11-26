@@ -40,7 +40,7 @@ class Pistol(Gun):
         side = None
         if(dirX >= 0 ) : side = True
         else : side = False
-        AddBullet(PistolBullet(owner.x, owner.y + owner.hCollisionBox/2, rad + (random.randint(-PistolPermitedError,PistolPermitedError)/180.0)*3.14,side))
+        AddBullet(PistolBullet(owner.x, owner.y + owner.hCollisionBox/2, rad + (random.randint(-PistolPermitedError,PistolPermitedError)/180.0)*3.14,side, owner.ally))
 
 
 class Rifle(Gun):
@@ -54,7 +54,7 @@ class Rifle(Gun):
         side = None
         if(dirX >= 0 ) : side = True
         else : side = False
-        AddBullet(RifleBullet(owner.x, owner.y + owner.hCollisionBox/2, rad + (random.randint(-RiflePermitedError,RiflePermitedError)/180.0)*3.14,side))
+        AddBullet(RifleBullet(owner.x, owner.y + owner.hCollisionBox/2, rad + (random.randint(-RiflePermitedError,RiflePermitedError)/180.0)*3.14,side, owner.ally))
 
 
 class SniperGun(Gun):
@@ -70,7 +70,7 @@ class SniperGun(Gun):
         side = None
         if(dirX >= 0 ) : side = True
         else : side = False
-        AddBullet(SniperBullet(owner.x, owner.y + owner.hCollisionBox/2, rad + (random.randint(-SniperPermitedError,SniperPermitedError)/180.0)*3.14,side))
+        AddBullet(SniperBullet(owner.x, owner.y + owner.hCollisionBox/2, rad + (random.randint(-SniperPermitedError,SniperPermitedError)/180.0)*3.14,side, owner.ally))
 
     def Render(self, owner, dirX, dirY, targetX, targetY):
         x1, y1 = int(owner.x - Camera.x), int(owner.y - Camera.y + owner.hCollisionBox/2)

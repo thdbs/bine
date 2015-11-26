@@ -4,6 +4,8 @@ import random
 import json
 import os
 
+import start_state
+
 from pico2d import *
 import game_framework
 from Character import *
@@ -15,9 +17,6 @@ import Bullet
 
 name = "MainState"
 
-StageNameList = ['stage1_1', 'stage1_2', 'stage2_boss', 'stage2_exit', 'shop']
-curidx = 0
-
 
 jimmy = None
 
@@ -27,7 +26,7 @@ def enter():
     jimmy = Jimmy(StageManager.StageDataList[StageManager.curStage]['inTeleportX'] ,StageManager.StageDataList[StageManager.curStage]['inTeleportY'])
     StageManager.MonsterList['stage2_exit'].append(Turtle(StageManager.StageDataList['stage2_exit']['inTeleportX'] + 500 ,StageManager.StageDataList['stage2_exit']['inTeleportY'], jimmy))
     StageManager.MonsterList['stage1_1'].append(DashDuck(StageManager.StageDataList['stage1_1']['inTeleportX'] + 500 ,StageManager.StageDataList['stage1_1']['inTeleportY'], jimmy))
-    StageManager.MonsterList['stage1_2'].append(Kaze(StageManager.StageDataList['stage1_2']['inTeleportX'] - 500 ,StageManager.StageDataList['stage1_2']['inTeleportY'], jimmy))
+    StageManager.MonsterList['stage1_1'].append(Kaze(StageManager.StageDataList['stage1_1']['outTeleportX']  ,StageManager.StageDataList['stage1_1']['outTeleportY'], jimmy))
     StageManager.MonsterList['stage2_boss'].append(SniperDuck(StageManager.StageDataList['stage2_boss']['inTeleportX'] + 500 ,StageManager.StageDataList['stage2_boss']['inTeleportY'], jimmy))
 
 
@@ -53,10 +52,6 @@ def handle_events():
             InputManager.KeyDown(event.key)
             if event.key == SDLK_ESCAPE:
                 game_framework.quit()
-            if event.key == SDLK_SPACE:
-                global  curidx
-                curidx += 1
-                StageManager.ChangeState(StageNameList[curidx % 5],jimmy)
         elif event.type == SDL_KEYUP:
             InputManager.KeyUp(event.key)
         elif event.type == SDL_MOUSEMOTION:
@@ -80,6 +75,17 @@ def update(frameTime):
         Bullet.Update(frameTime)
         StageManager.Update(frameTime)
         jimmy.Update(frameTime)
+        for i in Bullet.BulletList:
+            jimmy.CollisionCheck_Bullet(i)
+        for i in StageManager.MonsterList[StageManager.curStage]:
+            jimmy.CollisionCheck_Character(i)
+        for i in Bullet.BulletList:
+            for j in StageManager.MonsterList[StageManager.curStage]:
+                j.CollisionCheck_Bullet(i)
+        #수정해주기
+        if not jimmy.alive:
+            delay(0.2)
+            game_framework.push_state(start_state)
     delay(0.01)
 
 
