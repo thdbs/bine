@@ -1,7 +1,6 @@
 __author__ = '성소윤'
 import Camera
 from pico2d import *
-import json
 
 GraphicList = {}
 GraphicData = {}
@@ -11,7 +10,10 @@ ArmsGraphicList = {}
 EffectGraphicList = {}
 BackObjectGraphicList = {}
 BulletGraphicList = {}
+UIGraphicList = {}
+ItemGraphicList = {}
 frame_Interval = 0.1
+frame_Interval_effect = 0.3
 
 class Graphic:
     def Draw(self, x, y):
@@ -39,6 +41,40 @@ class Animation(Graphic):
             else :
                 self.image.clip_draw(int(frame*self.width), 0, int(self.width), self.height, drawPointX, drawPointY )
 
+class AnimationCenter(Graphic):
+    def __init__(self, image, width, height, frame, isSide = False, LeftImage = None):
+        self.image = image
+        self.width = width
+        self.height = height
+        self.frame = frame
+        self.isSide = isSide
+        if isSide :
+            self.left_image = LeftImage
+
+    def Draw(self, x, y, frame = 0, side = None ):
+        drawPointX = int(x - Camera.x)
+        drawPointY = int(y - Camera.y)
+        if Camera.In(drawPointX, drawPointY, self.width, self.height) :
+            if self.isSide :
+                if side == True :
+                    self.image.clip_draw(frame*self.width, 0, self.width, self.height, drawPointX, drawPointY )
+                else :
+                    self.left_image.clip_draw(frame*self.width, 0, self.width, self.height, drawPointX, drawPointY )
+            else :
+                self.image.clip_draw(int(frame*self.width), 0, int(self.width), self.height, drawPointX, drawPointY )
+
+class Animation_Stage(Graphic):
+    def __init__(self, image, width, height, frame):
+        self.image = image
+        self.width = width
+        self.height = height
+        self.frame = frame
+
+    def Draw(self, x, y, frame = 0, side = None ):
+        drawPointX = int(x - Camera.x)
+        drawPointY = int(y - Camera.y + 360)
+        self.image.clip_draw(int(frame*self.width), 0, int(self.width), self.height, drawPointX, drawPointY, 1280, 720 )
+
 class StageImage(Graphic):
     def __init__(self, image):
         self.image = image
@@ -64,8 +100,44 @@ class RotateImage(Graphic):
                 self.left_image.rotate_draw(rad, drawPointX, drawPointY)
 
 
+class StatImage(Graphic):
+    def __init__(self, image, width, height) :
+        self.image = image
+        self.width = width
+        self.height = height
+
+
+    def Draw(self, x, y, w = None):
+        if w == None : w = self.width
+        self.image.clip_draw(0, 0, w, self.height, x, y )
+
+class StaticImage(Graphic):
+    def __init__(self, image, width, height) :
+        self.image = image
+        self.width = width
+        self.height = height
+
+
+    def Draw(self, x, y):
+        drawPointX = int(x - Camera.x)
+        drawPointY = int(y - Camera.y + self.height/2)
+        self.image.clip_draw(0, 0, self.width, self.height, drawPointX, drawPointY )
+
+class StaticImageCenter(Graphic):
+    def __init__(self, image, width, height) :
+        self.image = image
+        self.width = width
+        self.height = height
+
+
+    def Draw(self, x, y):
+        drawPointX = int(x - Camera.x)
+        drawPointY = int(y - Camera.y)
+        self.image.clip_draw(0, 0, self.width, self.height, drawPointX, drawPointY )
+
+
 def GenGraphicList() :
-    global CharacterGraphicList, StageGraphicList, ArmsGraphicList, BackObjectGraphicList, BulletGraphicList, EffectGraphicList
+    global CharacterGraphicList, StageGraphicList, ArmsGraphicList, BackObjectGraphicList, BulletGraphicList, EffectGraphicList, UIGraphicList, ItemGraphicList
     global GraphicList
 
     global GraphicData
@@ -275,7 +347,7 @@ def GenGraphicList() :
                                                  GraphicData['Arms']['monster_sniper']['height'])
     gun_right = load_image('Resource/Sprites/Weapon/spr_boss_gun_right.png')
     gun_left = load_image('Resource/Sprites/Weapon/spr_boss_gun_left.png')
-    ArmsGraphicList['Boss_gun'] = RotateImage(gun_left, gun_right, GraphicData['Arms']['boss_gun']['width'],
+    ArmsGraphicList['Monster_boss'] = RotateImage(gun_left, gun_right, GraphicData['Arms']['boss_gun']['width'],
                                                  GraphicData['Arms']['boss_gun']['height'])
 
     #Bullet Image Ldad
@@ -299,4 +371,118 @@ def GenGraphicList() :
     #load Effect
     image = load_image('Resource/Sprites/Effect/spr_fire_pixel.png')
     EffectGraphicList['fire'] = \
-        Animation(image, image.w/15 ,image.h, 15)
+        Animation(image, image.w/ GraphicData['Effect']['fire']['frame'] ,image.h, GraphicData['Effect']['fire']['frame'] )
+    image = load_image('Resource/Sprites/Effect/spr_shield.png')
+    EffectGraphicList['shield'] = Animation(image, image.w/ GraphicData['Effect']['shield']['frame'] ,image.h, GraphicData['Effect']['shield']['frame'] )
+    image = load_image('Resource/Sprites/Effect/spr_shield_boss.png')
+    EffectGraphicList['bossShield'] = Animation(image, image.w/ GraphicData['Effect']['bossShield']['frame'] ,image.h, GraphicData['Effect']['bossShield']['frame'] )
+    image = load_image('Resource/Sprites/Effect/spr_teleporter_create.png')
+    EffectGraphicList['genPortal'] = Animation(image, image.w/ GraphicData['Effect']['genPortal']['frame'] ,image.h, GraphicData['Effect']['genPortal']['frame'] )
+    image = load_image('Resource/Sprites/Effect/spr_change_stage.png')
+    EffectGraphicList['chStage'] = Animation_Stage(image, image.w/ GraphicData['Effect']['chStage']['frame'] ,image.h, GraphicData['Effect']['chStage']['frame'] )
+    image = load_image('Resource/Sprites/Object/Box/spr_longbox_hit_0.png')
+    EffectGraphicList['goodBox_hit'] = AnimationCenter(image, image.w ,image.h, 1 )
+    image = load_image('Resource/Sprites/Object/Box/spr_longbox_hit_1.png')
+    EffectGraphicList['notGoodBox_hit'] = AnimationCenter(image, image.w ,image.h, 1 )
+    image = load_image('Resource/Sprites/Object/Box/spr_longbox_hit_2.png')
+    EffectGraphicList['dangerBox_hit'] = AnimationCenter(image, image.w ,image.h, 1 )
+    image = load_image('Resource/Sprites/Object/Box/spr_longbox_break.png')
+    EffectGraphicList['box_break'] = AnimationCenter(image, image.w/33 ,image.h, 33 )
+    image = load_image('Resource/Sprites/Object/Rock/spr_root4_hit_0.png')
+    EffectGraphicList['goodRock_hit'] = AnimationCenter(image, image.w ,image.h, 1 )
+    image = load_image('Resource/Sprites/Object/Rock/spr_root4_hit_1.png')
+    EffectGraphicList['notGoodRock_hit'] = AnimationCenter(image, image.w ,image.h, 1 )
+    image = load_image('Resource/Sprites/Object/Rock/spr_root4_hit_2.png')
+    EffectGraphicList['dangerRock_hit'] = AnimationCenter(image, image.w ,image.h, 1 )
+    image = load_image('Resource/Sprites/Object/Rock/spr_root4_break.png')
+    EffectGraphicList['rock_break'] = AnimationCenter(image, image.w/24 ,image.h, 24 )
+    image = load_image('Resource/Sprites/Effect/spr_crosshair_reload.png')
+    EffectGraphicList['reloading'] = AnimationCenter(image, image.w/24 ,image.h, 24 )
+    image = load_image('Resource/Sprites/Effect/spr_crosshair_reload_long.png')
+    EffectGraphicList['reloading_long'] = AnimationCenter(image, image.w/48 ,image.h, 48 )
+
+    image = load_image('Resource/Sprites/Item/spr_pickup_light.png')
+    EffectGraphicList['pickup_pistol'] = Animation(image, image.w/16 ,image.h, 16 )
+    image = load_image('Resource/Sprites/Item/spr_pickup_heavy_0-horz.png')
+    EffectGraphicList['pickup_rifle'] = Animation(image, image.w/16 ,image.h, 16 )
+    image = load_image('Resource/Sprites/Item/spr_pickup_medium.png')
+    EffectGraphicList['pickup_sniper'] = Animation(image, image.w/16 ,image.h, 16 )
+    image = load_image('Resource/Sprites/Item/spr_pickup_health_1.png')
+    EffectGraphicList['pickup_health'] = Animation(image, image.w/1 ,image.h, 1 )
+
+
+
+    #load UI
+    image = load_image('Resource/Sprites/Effect/hp_bar.png')
+    UIGraphicList['hp_bar'] = StatImage(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Effect/hp_bar_back.png')
+    UIGraphicList['hp_bar_back'] = StatImage(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Effect/shield_bar.png')
+    UIGraphicList['shield_bar'] = StatImage(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Effect/shield_bar_back.png')
+    UIGraphicList['shield_bar_back'] = StatImage(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Effect/coin_bar.png')
+    UIGraphicList['coin_bar'] = StatImage(image, image.w, image.h)
+
+    image = load_image('Resource/Sprites/Effect/spr_hud_face_jimmy_0.png')
+    UIGraphicList['jimmy_good'] = StatImage(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Effect/spr_hud_face_jimmy_1.png')
+    UIGraphicList['jimmy_danger'] = StatImage(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Effect/spr_hud_face_jimmy_2.png')
+    UIGraphicList['jimmy_bad'] = StatImage(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Effect/spr_crosshair_0.png')
+    UIGraphicList['cursor'] = StaticImageCenter(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Weapon/spr_jimmy_pistol.png')
+    UIGraphicList['Pistol'] = StatImage(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Weapon/spr_jimmy_pistol_back.png')
+    UIGraphicList['Pistol_back'] = StatImage(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Weapon/spr_jimmy_rifle.png')
+    UIGraphicList['Rifle'] = StatImage(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Weapon/spr_jimmy_rifle_back.png')
+    UIGraphicList['Rifle_back'] = StatImage(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Weapon/spr_jimmy_sniper.png')
+    UIGraphicList['Sniper'] = StatImage(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Weapon/spr_jimmy_sniper_back.png')
+    UIGraphicList['Sniper_back'] = StatImage(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Stage/shop_mini.png')
+    UIGraphicList['shop'] = StatImage(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Stage/stage1_room1_mini.png')
+    UIGraphicList['stage1_1'] = StatImage(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Stage/stage1_room2_mini.png')
+    UIGraphicList['stage1_2'] = StatImage(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Stage/stage2_boss_mini.png')
+    UIGraphicList['stage2_boss'] = StatImage(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Stage/stage2_exit_mini.png')
+    UIGraphicList['stage2_exit'] = StatImage(image, image.w, image.h)
+
+    #load Item
+    image = load_image('Resource/Sprites/Item/spr_coin_drop.png')
+    ItemGraphicList['coin_drop'] = Animation(image, image.w/ GraphicData['Item']['coin_drop']['frame'] ,image.h, GraphicData['Item']['coin_drop']['frame'] )
+    image = load_image('Resource/Sprites/Item/spr_coin.png')
+    ItemGraphicList['coin'] = Animation(image, image.w/ GraphicData['Item']['coin']['frame'] ,image.h, GraphicData['Item']['coin']['frame'] )
+    image = load_image('Resource/Sprites/Object/spr_teleporter.png')
+    ItemGraphicList['portal'] = StaticImage(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Object/spr_teleporter_shop.png')
+    ItemGraphicList['shop_portal'] = StaticImage(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Item/spr_light.png')
+    ItemGraphicList['pistol'] = StaticImage(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Item/spr_heavy.png')
+    ItemGraphicList['rifle'] = StaticImage(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Item/spr_medium.png')
+    ItemGraphicList['sniper'] = StaticImage(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Item/spr_pickup_health_0.png')
+    ItemGraphicList['health'] = StaticImage(image, image.w, image.h)
+
+
+    image = load_image('Resource/Sprites/Object/Box/spr_longbox_0.png')
+    BackObjectGraphicList['goodBox'] = StaticImageCenter(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Object/Box/spr_longbox_1.png')
+    BackObjectGraphicList['notGoodBox'] = StaticImageCenter(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Object/Box/spr_longbox_2.png')
+    BackObjectGraphicList['dangerBox'] = StaticImageCenter(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Object/Rock/spr_root4_0.png')
+    BackObjectGraphicList['goodRock'] = StaticImageCenter(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Object/Rock/spr_root4_1.png')
+    BackObjectGraphicList['notGoodRock'] = StaticImageCenter(image, image.w, image.h)
+    image = load_image('Resource/Sprites/Object/Rock/spr_root4_2.png')
+    BackObjectGraphicList['dangerRock'] = StaticImageCenter(image, image.w, image.h)

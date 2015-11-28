@@ -1,8 +1,5 @@
 __author__ = '성소윤'
 
-from State import *
-import Action
-import DrawManager
 import InputManager
 import Camera
 from AIstate import *

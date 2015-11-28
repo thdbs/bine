@@ -12,7 +12,10 @@ logo_time = 0.0
 def enter():
     global image
     open_canvas(1280, 720)
+    game_framework.font = load_font('Resource/wendy.ttf', 30)
+    game_framework.bigfont = load_font('Resource/wendy.ttf', 60)
     image = load_image('Resource/Sprites/kpu_credit.png')
+    hide_cursor()
 
 
 def exit():

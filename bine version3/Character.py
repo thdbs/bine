@@ -1,12 +1,10 @@
 __author__ = '성소윤'
 
-import json
-from pico2d import *
-import InputManager
-import random
 import PlayerState
-from Arms import *
 import Action
+import EffectManager
+from Arms import *
+
 
 character_data = {}
 
@@ -53,12 +51,17 @@ class Character:
                 if self.shield >0:
                     self.shield -= bullet.hit
                     self.shield = max(self.shield, 0)
+                    EffectManager.CallEffect('shield', self, False)
                 else:
                     self.health -= bullet.hit
                     self.health = max(self.health, 0)
+                    str = self.name + '_hit'
+                    EffectManager.CallEffect( str, self, True)
+                    self.hit = True
                     if self.health <= 0 :
                         self.ChangeState(PlayerState.stateList['death'], 'death')
                         self.death = True
+                        if self.name != 'Jimmy' : self.GenCoin()
                 bullet.alive = False
                 return(True)
         return(False)
@@ -70,24 +73,39 @@ class Character:
                 if self.shield > 0:
                     self.shield -= character.attack
                     self.shield = max(self.shield, 0)
+                    EffectManager.CallEffect('shield', self, False)
                 else:
                     self.health -= character.attack
                     self.health = max(self.health, 0)
+                    str = self.name + '_hit'
+                    EffectManager.CallEffect( str, self, True)
+                    self.hit = True
                     if self.health <= 0 :
                         self.ChangeState(PlayerState.stateList['death'], 'death')
                         self.death = True
+                        if self.name != 'Jimmy' : self.GenCoin()
             if self.stateName == 'melee':
                 if character.shield > 0:
                     character.shield -= self.attack
                     character.shield = max(character.shield, 0)
+                    EffectManager.CallEffect('shield', character, False)
                 else:
                     character.health -= self.attack
                     character.health = max(character.health, 0)
+                    str = character.name + '_hit'
+                    EffectManager.CallEffect( str, character, True)
                     if character.health <= 0 :
                         character.ChangeState(PlayerState.stateList['death'], 'death')
                         character.death = True
+                        if character.name != 'Jimmy' : character.GenCoin()
             return(True)
         return(False)
+
+    def CollisionCheck(self, obj):
+        if self.x - self.wCollisionBox/2 < obj.x + obj.wCollisionBox/2 and self.x + self.wCollisionBox/2 > obj.x - obj.wCollisionBox/2 and \
+            self.y < obj.y + obj.hCollisionBox and self.y + self.hCollisionBox > obj.y :
+            return True
+        return False
 
 
 class Jimmy(Character):
@@ -102,6 +120,10 @@ class Jimmy(Character):
     meleeTime = None
     attack = None
     ally = True
+    shieldTime = None
+    maxPistol = None
+    maxRifle = None
+    maxSniper = None
     def __init__(self, x, y):
         if not Jimmy.created:
             Jimmy.created = True
@@ -114,6 +136,10 @@ class Jimmy(Character):
             Jimmy.dashTime = character_data['Jimmy']['dashTime']
             Jimmy.meleeTime = character_data['Jimmy']['meleeTime']
             Jimmy.attack = character_data['Jimmy']['attack']
+            Jimmy.shieldTime = character_data['Jimmy']['shieldTimer']
+            Jimmy.maxPistol = character_data['Jimmy']['maxPistol']
+            Jimmy.maxRifle = character_data['Jimmy']['maxRifle']
+            Jimmy.maxSniper = character_data['Jimmy']['maxSniper']
         Character.__init__(self, x, y, Jimmy.maxHealth, Jimmy.maxShield)
         self.state = PlayerState.stateList["Jimmy_idle"]
         self.dash = False
@@ -127,17 +153,53 @@ class Jimmy(Character):
         self.shot = False
         self.meleeTimer = 0
         self.activeAttack = False
+        self.shieldTimer = 0
+        self.genShield = False
+        self.coin = 0
+        self.reloadEffect = None
+        self.bullet = {
+            "Pistol" : { "reloaded" : Jimmy.maxPistol, "storage" :  character_data['Jimmy']['pistol'], "max" : Jimmy.maxPistol },
+            "Rifle" : { "reloaded" : Jimmy.maxRifle, "storage" :  character_data['Jimmy']['rifle'], "max" : Jimmy.maxRifle },
+            "Sniper" : { "reloaded" : Jimmy.maxSniper, "storage" :  character_data['Jimmy']['sniper'], "max" : Jimmy.maxRifle }
+        }
+        self.reloading = False
 
     def Update(self, frameTime):
         self.PrcessInput()
+        if self.reloading and self.reloadEffect.end :
+            self.reloadEffect = None
+            self.reloading = False
+            need = self.bullet[self.ArmsNameList[self.curArm]]['max']- self.bullet[self.ArmsNameList[self.curArm]]['reloaded']
+            need = min(need, self.bullet[self.ArmsNameList[self.curArm]]['storage'])
+            self.bullet[self.ArmsNameList[self.curArm]]['reloaded'] += need
+            self.bullet[self.ArmsNameList[self.curArm]]['storage'] -= need
+
         Character.Update(self, frameTime)
-        if self.shot and not self.death :
+        if self.shot and not self.reloading and not self.death and self.bullet[self.ArmsNameList[self.curArm]]['reloaded'] > 0 :
             self.ArmsList[self.ArmsNameList[self.curArm]].Shoot(self,InputManager.mouseX + Camera.x - self.x, InputManager.mouseY + Camera.y - self.y - self.hCollisionBox/2 )
+            self.bullet[self.ArmsNameList[self.curArm]]['reloaded'] -= 1
+            if self.bullet[self.ArmsNameList[self.curArm]]['reloaded'] == 0 and self.bullet[self.ArmsNameList[self.curArm]]['storage'] > 0 :
+                self.reloadEffect = EffectManager.CallEffect('reloading_long', InputManager.mPos, False)
+                self.reloading = True
+
+
+        self.shieldTimer += frameTime
+        if self.shieldTimer > self.shieldTime :
+            self.shieldTimer = 0
+            if self.shield < self.maxShield :
+                self.genShield = True
+                EffectManager.CallEffect('shield', self, False)
+
+        if self.genShield :
+            self.shield += 1
+            self.shield = min(self.shield, self.maxShield)
+            if (self.shield == self.maxShield) : self.genShield = False
 
     def Render(self):
-        Character.Render(self)
+        if not self.hit : Character.Render(self)
         if not self.activeAttack and not self.death : self.ArmsList[self.ArmsNameList[self.curArm]].Render(self, InputManager.mouseX + Camera.x - self.x, InputManager.mouseY + Camera.y - self.y - self.hCollisionBox/2, InputManager.mouseX + Camera.x,InputManager.mouseY + Camera.y )
         elif self.activeAttack and not self.death : self.ArmsList[self.ArmsNameList[self.curArm]].Render(self, self.vx , self.vy - 100, self.x, self.y + self.hCollisionBox/2 )
+        StageManager.MiniMapRender(self.x, self.y, 255, 50, 50)
 
     def PrcessInput(self):
         if not self.dash and not self.activeAttack :
@@ -164,6 +226,20 @@ class Jimmy(Character):
                 self.vx = dirx * Jimmy.WALK_SPEED_PPS
                 self.vy = diry * Jimmy.WALK_SPEED_PPS
                 self.ChangeState(PlayerState.stateList['Jimmy_melee'], 'melee')
-        if InputManager.GetKeyState(SDLK_q) : self.curArm = (self.curArm + 1) %3
+            if (InputManager.GetKeyState(SDLK_e)) and not self.death :
+                for i in StageManager.PortalList[StageManager.curStage]:
+                    if i.Teleport(self): break
+                if StageManager.curStage == 'shop':
+                    for i in StageManager.ShopItemList:
+                        i.CollisionCheck(self)
+                InputManager.KeyUp(SDLK_e)
+            if InputManager.GetKeyState(SDLK_r) and not self.death :
+                if self.bullet[self.ArmsNameList[self.curArm]]['storage'] > 0 and self.bullet[self.ArmsNameList[self.curArm]]['reloaded'] < self.bullet[self.ArmsNameList[self.curArm]]['max']\
+                        and not self.reloading:
+                    self.reloadEffect = EffectManager.CallEffect('reloading', InputManager.mPos, False)
+                    self.reloading = True
+        if InputManager.GetKeyState(SDLK_q) :
+            self.curArm = (self.curArm + 1) % 3
+            InputManager.KeyUp(SDLK_q)
         if InputManager.LButton : self.shot = True
         else : self.shot = False

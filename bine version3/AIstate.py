@@ -1,10 +1,8 @@
 __author__ = '성소윤'
 
-import Action
 from State import *
-import PlayerState
-import DrawManager
 import random
+import PlayerState
 
 class AiIdle(Idle):
     def update(self, character, frameTime):

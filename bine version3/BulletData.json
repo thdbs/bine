@@ -2,9 +2,9 @@
   "Pistol" : { "speed" : 1500 , "speedRates" : 100
   , "collisionBoxWidth" : 22, "collisionBoxHeight" : 19, "maximumRange" : 700, "hit" : 15 },
   "Rifle" : { "speed" : 1100 , "speedRates" : 1
-  , "collisionBoxWidth" : 27, "collisionBoxHeight" : 13, "maximumRange" : 700, "hit" : 5 },
+  , "collisionBoxWidth" : 27, "collisionBoxHeight" : 13, "maximumRange" : 700, "hit" : 2 },
   "Sniper" : { "speed" : 2000 , "speedRates" : 10
-  , "collisionBoxWidth" : 46, "collisionBoxHeight" : 20, "maximumRange" : 10000, "hit" : 40 },
+  , "collisionBoxWidth" : 20, "collisionBoxHeight" : 20, "maximumRange" : 10000, "hit" : 40 },
   "Boss" : { "speed" : 2000 , "speedRates" : 5
-  , "collisionBoxWidth" : 40, "collisionBoxHeight" : 3, "maximumRange" : 10000, "hit" : 50 }
+  , "collisionBoxWidth" : 20, "collisionBoxHeight" : 13, "maximumRange" : 10000, "hit" : 50 }
 }

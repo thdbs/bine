@@ -1,19 +1,16 @@
 __author__ = '성소윤'
 
-import random
-import json
-import os
-
 import start_state
 
-from pico2d import *
 import game_framework
+import GenData
 from Character import *
 from Monster import *
-import InputManager
-import GenData
-import StageManager
 import Bullet
+import UIManager
+from pico2d import *
+import CoinManager
+
 
 name = "MainState"
 
@@ -24,10 +21,12 @@ def enter():
     global jimmy, MonsterList
     GenData.GenData()
     jimmy = Jimmy(StageManager.StageDataList[StageManager.curStage]['inTeleportX'] ,StageManager.StageDataList[StageManager.curStage]['inTeleportY'])
+    StageManager.MonsterList['stage1_2'].append(DashDuck(StageManager.StageDataList['stage1_2']['inTeleportX'] - 500 ,StageManager.StageDataList['stage1_2']['inTeleportY'], jimmy))
     StageManager.MonsterList['stage2_exit'].append(Turtle(StageManager.StageDataList['stage2_exit']['inTeleportX'] + 500 ,StageManager.StageDataList['stage2_exit']['inTeleportY'], jimmy))
     StageManager.MonsterList['stage1_1'].append(DashDuck(StageManager.StageDataList['stage1_1']['inTeleportX'] + 500 ,StageManager.StageDataList['stage1_1']['inTeleportY'], jimmy))
     StageManager.MonsterList['stage1_1'].append(Kaze(StageManager.StageDataList['stage1_1']['outTeleportX']  ,StageManager.StageDataList['stage1_1']['outTeleportY'], jimmy))
     StageManager.MonsterList['stage2_boss'].append(SniperDuck(StageManager.StageDataList['stage2_boss']['inTeleportX'] + 500 ,StageManager.StageDataList['stage2_boss']['inTeleportY'], jimmy))
+    StageManager.MonsterList['stage2_boss'].append(Kaze(StageManager.StageDataList['stage2_boss']['inTeleportX'] + 1000 ,StageManager.StageDataList['stage2_boss']['inTeleportY'], jimmy))
 
 
 def exit():
@@ -56,6 +55,7 @@ def handle_events():
             InputManager.KeyUp(event.key)
         elif event.type == SDL_MOUSEMOTION:
             InputManager.mouseX, InputManager.mouseY = event.x, 720 - event.y
+            InputManager.mPos.x, InputManager.mPos.y = event.x + Camera.x, 720 - event.y + Camera.y
         elif event.type == SDL_MOUSEBUTTONDOWN:
             if event.button == SDL_BUTTON_LEFT:
                 InputManager.LButton = True
@@ -82,10 +82,12 @@ def update(frameTime):
         for i in Bullet.BulletList:
             for j in StageManager.MonsterList[StageManager.curStage]:
                 j.CollisionCheck_Bullet(i)
+        EffectManager.Update(frameTime)
+        CoinManager.Update(frameTime, jimmy)
         #수정해주기
         if not jimmy.alive:
             delay(0.2)
-            game_framework.push_state(start_state)
+            game_framework.quit()
     delay(0.01)
 
 
@@ -93,6 +95,10 @@ def draw():
     global jimmy
     clear_canvas()
     StageManager.Render()
+    CoinManager.Render()
     Bullet.Render()
     jimmy.Render()
+    EffectManager.Render()
+    UIManager.Render()
+    # debug_print('test')
     update_canvas()

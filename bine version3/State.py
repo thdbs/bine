@@ -1,7 +1,6 @@
 __author__ = '성소윤'
 
 import Action
-import PlayerState
 import DrawManager
 
 class State:

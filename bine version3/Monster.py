@@ -1,9 +1,12 @@
 __author__ = '성소윤'
 
-from Arms import *
 import PlayerState
-import random
 import Character
+from Arms import *
+import random
+import CoinManager
+import game_framework
+
 
 class Monster(Character.Character):
     def Update(self, frameTime):
@@ -15,9 +18,15 @@ class Monster(Character.Character):
             self.attackTimer = 0
 
     def Render(self):
-        Character.Character.Render(self)
+        if not self.hit : Character.Character.Render(self)
         if not self.death : self.Arm.Render(self, self.target.x - self.x, (self.target.y + self.target.hCollisionBox/2) - (self.y + self.hCollisionBox/2), self.target.x, (self.target.y + self.target.hCollisionBox/2))
+        StageManager.MiniMapRender(self.x, self.y, 50, 50, 50)
 
+    def GenCoin(self):
+        for i in range(self.coin) :
+            x = random.randint(int(self.x - self.wCollisionBox/2 - 10), int(self.x + self.wCollisionBox/2 + 10))
+            y = random.randint(int(self.y - 10), int(self.y + self.hCollisionBox + 10))
+            CoinManager.AddCoin(x, y)
 
 
 class Turtle(Monster):
@@ -33,6 +42,7 @@ class Turtle(Monster):
     availDash = False
     attackTime = None
     ally = False
+    coin = None
     def __init__(self, x, y, target) :
         if not Turtle.created:
             Turtle.created = True
@@ -44,6 +54,7 @@ class Turtle(Monster):
             Turtle.detectionRange = Character.character_data['Turtle']['detectionRange']
             Turtle.attackRange = Character.character_data['Turtle']['attackRange']
             Turtle.attackTime = Character.character_data['Turtle']['attackTime']
+            Turtle.coin = Character.character_data['Turtle']['coin']
         Character.Character.__init__(self, x, y, Turtle.maxHealth, Turtle.maxShield)
         self.target = target
         self.state = PlayerState.stateList["A.I_idle"]
@@ -66,6 +77,7 @@ class SniperDuck(Monster):
     availDash = False
     attackTime = None
     ally = False
+    coin = None
     def __init__(self, x, y, target):
         if not SniperDuck.created:
             SniperDuck.created = True
@@ -77,6 +89,7 @@ class SniperDuck(Monster):
             SniperDuck.detectionRange = Character.character_data['SniperDuck']['detectionRange']
             SniperDuck.attackRange = Character.character_data['SniperDuck']['attackRange']
             SniperDuck.attackTime = Character.character_data['SniperDuck']['attackTime']
+            SniperDuck.coin = Character.character_data['SniperDuck']['coin']
         Character.Character.__init__(self, x, y, SniperDuck.maxHealth, SniperDuck.maxShield)
         self.target = target
         self.state = PlayerState.stateList["A.I_idle"]
@@ -99,6 +112,7 @@ class Boss(Monster):
     availDash = False
     attackTime = None
     ally = False
+    coin = None
     def __init__(self, x, y, target):
         if not Boss.created:
             Boss.created = True
@@ -110,6 +124,7 @@ class Boss(Monster):
             Boss.detectionRange = Character.character_data['Boss']['detectionRange']
             Boss.attackRange = Character.character_data['Boss']['attackRange']
             Boss.attackTime = Character.character_data['Boss']['attackTime']
+            Boss.coin = Character.character_data['Boss']['coin']
         Character.Character.__init__(self, x, y, Boss.maxHealth, Boss.maxShield)
         self.target = target
         self.state = PlayerState.stateList["A.I_idle"]
@@ -118,6 +133,12 @@ class Boss(Monster):
         self.dirx, self.diry = 0, 0
         self.vx, self.vy = Boss.WALK_SPEED_PPS, Boss.WALK_SPEED_PPS
         self.attackTimer = 0
+        self.side = False
+
+    def Render(self):
+        Monster.Render(self)
+        game_framework.bigfont.draw(620, 690, 'Boss HP : %d' %self.health , (255, 255, 255))
+        StageManager.MiniMapRender(self.x, self.y, 50, 50, 255)
 
         
         
@@ -136,6 +157,7 @@ class DashDuck(Monster):
     availDash = True
     attackTime = None
     ally = False
+    coin = None
     def __init__(self, x, y, target):
         if not DashDuck.created:
             DashDuck.created = True
@@ -149,6 +171,7 @@ class DashDuck(Monster):
             DashDuck.detectionRange = Character.character_data['DashDuck']['detectionRange']
             DashDuck.attackRange = Character.character_data['DashDuck']['attackRange']
             DashDuck.attackTime = Character.character_data['DashDuck']['attackTime']
+            DashDuck.coin = Character.character_data['DashDuck']['coin']
         Character.Character.__init__(self, x, y, DashDuck.maxHealth, DashDuck.maxShield)
         self.target = target
         self.state = PlayerState.stateList["A.I_idle"]
@@ -178,6 +201,7 @@ class Kaze(Monster):
     attackTime = None
     attack = None
     ally = False
+    coin = None
     def __init__(self, x, y, target):
         if not Kaze.created:
             Kaze.created = True
@@ -193,6 +217,7 @@ class Kaze(Monster):
             Kaze.meleeTime = Character.character_data['Kaze']['meleeTime']
             Kaze.attackTime = Character.character_data['Kaze']['attackTime']
             Kaze.attack = Character.character_data['Kaze']['attack']
+            Kaze.coin = Character.character_data['Kaze']['coin']
         Character.Character.__init__(self, x, y, Kaze.maxHealth, Kaze.maxShield)
         self.target = target
         self.state = PlayerState.stateList["A.I_idle"]
@@ -207,9 +232,13 @@ class Kaze(Monster):
         self.attackTimer = 0
     def Update(self, frameTime):
         Character.Character.Update(self, frameTime)
+        if self.stateName == 'dash' or self.stateName == 'attack':
+            self.activeAttack = True
+        else : self.activeAttack = False
         self.attackTimer += frameTime
         if self.attackTimer > self.attackTime :
             self.attackTimer = 0
 
     def Render(self):
         Character.Character.Render(self)
+        StageManager.MiniMapRender(self.x, self.y, 50, 50, 50)

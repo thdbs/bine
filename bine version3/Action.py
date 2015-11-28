@@ -1,10 +1,9 @@
 __author__ = '성소윤'
 
-
-import Character
 import DrawManager
-from math import *
 import StageManager
+from math import *
+
 
 actionList = {}
 maxSpeed = 80    #동기화 문제고려해서 수정
@@ -14,6 +13,9 @@ def GenAction():
     actionList['move'] = Move()
     actionList['increaseFrame'] = IncreaseFrame()
     actionList['increaseFrameOnce'] = IncreaseFrameOnce()
+    actionList['increaseFramePrime'] = IncreaseFramePrime()
+    actionList['increaseFrameOncePrime'] = IncreaseFrameOncePrime()
+    actionList['increaseFrameOnce_effect'] = IncreaseFrameOnce_Effect()
     actionList['observation'] = Observation()
     actionList['Trace'] = Trace()
 
@@ -63,6 +65,41 @@ class IncreaseFrameOnce(Action):
             sprName = character.name + '_' + character.stateName
             character.frame = (character.frame + increaseRate)
             if character.frame > DrawManager.CharacterGraphicList[sprName].frame :
+                return True
+            return False
+
+class IncreaseFramePrime(Action):
+    def update(self, obj, frameTime, graphicList, graphicName):
+        obj.frameTimer += frameTime
+        if(obj.frameTimer >= DrawManager.frame_Interval):
+            increaseRate = int(obj.frameTimer / DrawManager.frame_Interval)
+            obj.frameTimer = 0
+            if graphicList == 'Item' :
+                obj.frame = (obj.frame + increaseRate) % DrawManager.ItemGraphicList[graphicName].frame
+
+class IncreaseFrameOncePrime(Action):
+    def update(self, obj, frameTime, graphicList, graphicName):
+        obj.frameTimer += frameTime
+        if(obj.frameTimer >= DrawManager.frame_Interval):
+            increaseRate = int(obj.frameTimer / DrawManager.frame_Interval)
+            obj.frameTimer = 0
+            obj.frame = obj.frame + increaseRate
+            if graphicList == 'Item' :
+                if obj.frame > DrawManager.ItemGraphicList[graphicName].frame :
+                    return True
+
+            return False
+
+        
+class IncreaseFrameOnce_Effect(Action):
+    def update(self, effect, frameTime):
+        effect.frameTimer += frameTime
+        if(effect.frameTimer >= DrawManager.frame_Interval):
+            increaseRate = int(effect.frameTimer / DrawManager.frame_Interval_effect)
+            effect.frame = (effect.frame + increaseRate)
+            if not effect.isCharacter and effect.frame > DrawManager.EffectGraphicList[effect.graphic_name].frame :
+                return True
+            elif effect.isCharacter and effect.frame > DrawManager.CharacterGraphicList[effect.graphic_name].frame :
                 return True
             return False
 

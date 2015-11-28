@@ -1,9 +1,9 @@
 __author__ = '성소윤'
 
 import  json
-from math import *
 import DrawManager
 import StageManager
+from math import *
 
 BulletData = {}
 BulletList = []
@@ -53,10 +53,12 @@ class Bullet:
         self.CheckAlive()
 
     def Render(self):
-        DrawManager.BulletGraphicList[self.name].Draw(self.x, self.y, self.side,self.radian)
+        delta = 0
+        if self.side == False : delta = 3.14
+        DrawManager.BulletGraphicList[self.name].Draw(self.x, self.y, self.side,self.radian + delta)
 
     def CheckAlive(self):
-        if self.travel >= self.maximumRange or StageManager.MapCollisionCheck(self,0 ,0) :
+        if self.travel >= self.maximumRange or StageManager.BulletMapCollisionCheck(self,0 ,0) :
             self.alive = False
 
 class PistolBullet(Bullet):

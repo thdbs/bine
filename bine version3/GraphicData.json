@@ -58,4 +58,15 @@
     "sniper" : {"width" : 46, "height" : 30 },
     "boss" : {"width" : 46, "height" : 30 }
   }
+  ,"Effect" : {
+    "fire" : { "frame" : 15 },
+    "shield" : {"frame" : 6},
+    "bossShield" : {"frame" : 6},
+    "genPortal" : { "frame" : 22 },
+    "chStage" : { "frame" : 22 }
+  }
+  ,"Item" : {
+    "coin_drop" : { "frame" : 5 },
+    "coin" : {"frame" : 14 }
+  }
 }

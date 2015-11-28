@@ -1,12 +1,11 @@
 __author__ = '성소윤'
 
-from Bullet import *
-import DrawManager
-from math import *
 import random
 import Camera
-from pico2d import *
 import InputManager
+from pico2d import *
+from Bullet import *
+from math import *
 
 PistolPermitedError = 15
 RiflePermitedError = 20
@@ -79,4 +78,15 @@ class SniperGun(Gun):
         Gun.Render(self, owner, dirX, dirY, targetX, targetY)
 
 class BossGun(Gun):
-    pass
+    name = None
+    def __init__(self, owner_name):
+        if BossGun.name == None : BossGun.name = 'boss'
+        self.owner_name = owner_name
+
+    def Shoot(self, owner, dirX, dirY):
+        owner.shot = False
+        rad = atan2(dirY, dirX)
+        side = None
+        if(dirX >= 0 ) : side = True
+        else : side = False
+        AddBullet(BossBullet(owner.x, owner.y + owner.hCollisionBox/2, rad + (random.randint(-SniperPermitedError,SniperPermitedError)/180.0)*3.14,side, owner.ally))
