@@ -14,7 +14,7 @@ def Render():
     if MainState.jimmy.health > 140 :DrawManager.UIGraphicList['jimmy_good'].Draw(50, 675 )
     elif MainState.jimmy.health > 70 :DrawManager.UIGraphicList['jimmy_danger'].Draw(50, 675 )
     else :DrawManager.UIGraphicList['jimmy_bad'].Draw(70, 660 )
-    DrawManager.UIGraphicList['hp_bar_back'].Draw(70 + 15 + 10 + 140, 677 )
+    DrawManager.UIGraphicList['hp_bar_back'].Draw(210 + 25 , 677 )
     DrawManager.UIGraphicList['hp_bar'].Draw(70 + 15 + 8 + MainState.jimmy.health/2, 680 , MainState.jimmy.health)
     DrawManager.UIGraphicList['shield_bar_back'].Draw(70 + 10 + 90, 658 )
     DrawManager.UIGraphicList['shield_bar'].Draw(70 + 8 + (MainState.jimmy.shield*3)/2, 660 , MainState.jimmy.shield*3)
