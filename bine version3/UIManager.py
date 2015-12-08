@@ -19,7 +19,7 @@ def Render():
     DrawManager.UIGraphicList['shield_bar_back'].Draw(170, 658 )
     DrawManager.UIGraphicList['shield_bar'].Draw(70 + 8 + (MainState.jimmy.shield*3)/2, 660 , MainState.jimmy.shield*3)
     DrawManager.UIGraphicList['coin_bar'].Draw(10 + 71, 600)
-    game_framework.font.draw(70 + 15 + 10 + 5, 685, 'hp                                 %d' % MainState.jimmy.health, (255, 255, 255))
+    game_framework.font.draw(100, 685, 'hp                                 %d' % MainState.jimmy.health, (255, 255, 255))
     game_framework.font.draw(85, 660, 'shield          %d' % MainState.jimmy.shield, (255, 255, 255))
     game_framework.font.draw(100, 600, '%d' % MainState.jimmy.coin, (255, 255, 255))
     player = MainState.jimmy
