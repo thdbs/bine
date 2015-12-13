@@ -3,7 +3,10 @@ __author__ = '성소윤'
 import  json
 import DrawManager
 import StageManager
+import EffectManager
+import Camera
 from math import *
+import SoundManager
 
 BulletData = {}
 BulletList = []
@@ -60,7 +63,10 @@ class Bullet:
     def CheckAlive(self):
         if self.travel >= self.maximumRange or StageManager.BulletMapCollisionCheck(self,0 ,0) :
             self.alive = False
-
+            if self.name == 'boss':
+                EffectManager.CallEffect('explode', self, False )
+                if not Camera.effect : Camera.effect = True
+                SoundManager.CallEffectSound('explosion')
 class PistolBullet(Bullet):
     created = False
     name = None

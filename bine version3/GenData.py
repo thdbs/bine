@@ -4,7 +4,7 @@ import Character
 import PlayerState
 import Action
 import DrawManager
-import StageManager
+import SoundManager
 import Bullet
 
 def GenData():
@@ -12,5 +12,5 @@ def GenData():
     PlayerState.GenStateList()
     Action.GenAction()
     DrawManager.GenGraphicList()
-    StageManager.GenStageData()
     Bullet.GenBulletData()
+    SoundManager.GenData()

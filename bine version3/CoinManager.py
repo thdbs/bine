@@ -3,8 +3,13 @@ __author__ = '성소윤'
 from math import *
 import DrawManager
 import Action
+import SoundManager
 
 coinList = []
+
+def Init():
+    global coinList
+    coinList = []
 
 def AddCoin(x, y):
     coinList.append(Coin(x, y))
@@ -54,4 +59,5 @@ class Coin:
             self.y += self.dirY*5
             if player.CollisionCheck(self) :
                 self.eaten = True
+                SoundManager.CallEffectSound('coin')
                 player.coin += 1

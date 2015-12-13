@@ -3,6 +3,7 @@ __author__ = '성소윤'
 import DrawManager
 import StageManager
 import EffectManager
+import SoundManager
 
 class Portal:
     wCollisionBox = None
@@ -63,6 +64,7 @@ class PistolItem(Item):
                 if player.coin >= self.coin:
                     player.coin -= self.coin
                     player.bullet['Pistol']["storage"] += self.bullet
+                    SoundManager.CallEffectSound('buy')
                     self.effect = EffectManager.CallEffect('pickup_pistol', self, False )
                     self.draw = False
             self.y += Item.hCollisionBox/2
@@ -85,6 +87,7 @@ class RifleItem(Item):
             if player.coin >= self.coin:
                 player.coin -= self.coin
                 player.bullet['Rifle']["storage"] += self.bullet
+                SoundManager.CallEffectSound('buy')
                 self.effect = EffectManager.CallEffect('pickup_rifle', self, False )
                 self.draw = False
         self.y += Item.hCollisionBox/2
@@ -108,6 +111,7 @@ class SniperItem(Item):
             if player.coin >= self.coin:
                 player.coin -= self.coin
                 player.bullet['Sniper']["storage"] += self.bullet
+                SoundManager.CallEffectSound('buy')
                 self.effect = EffectManager.CallEffect('pickup_sniper', self, False )
                 self.draw = False
         self.y += Item.hCollisionBox/2
@@ -131,6 +135,7 @@ class HealthItem(Item):
             if player.coin >= self.coin:
                 player.coin -= self.coin
                 player.health = min(self.health + player.health, player.maxHealth)
+                SoundManager.CallEffectSound('buy')
                 self.effect = EffectManager.CallEffect('pickup_health', self, False )
                 self.draw = False
         self.y += Item.hCollisionBox/2

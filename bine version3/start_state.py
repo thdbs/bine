@@ -1,7 +1,7 @@
 import game_framework
 from pico2d import *
 
-import MainState
+import title_state
 
 
 name = "StartState"
@@ -12,6 +12,7 @@ logo_time = 0.0
 def enter():
     global image
     open_canvas(1280, 720)
+    Mix_AllocateChannels(20)
     game_framework.font = load_font('Resource/wendy.ttf', 30)
     game_framework.bigfont = load_font('Resource/wendy.ttf', 60)
     image = load_image('Resource/Sprites/kpu_credit.png')
@@ -29,7 +30,7 @@ def update(frameTime):
 
     if(logo_time > 1.0):
         logo_time = 0.0
-        game_framework.push_state(MainState)
+        game_framework.push_state(title_state)
     delay(0.01)
     logo_time += 0.01
 
@@ -38,7 +39,7 @@ def update(frameTime):
 def draw():
     global image
     clear_canvas()
-    image.draw(640, 360)
+    image.clip_draw(0, 0, 1280, 720, 640, 360 )
     update_canvas()
 
 

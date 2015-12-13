@@ -9,6 +9,8 @@ import Bullet
 import CoinManager
 import EffectManager
 from Item import *
+import SoundManager
+happy_end = False
 
 
 StageDataList = {}
@@ -20,6 +22,26 @@ PortalEffect = None
 ShopItemList = []
 miniMapX = 900
 miniMapY = 10
+fireframe = 0
+fireframeTimer = 0
+bgmList = {}
+
+def Init():
+    global StageDataList, curStage, MonsterList, PortalList, PortalState, PortalEffect, ShopItemList, miniMapX, miniMapY, fireframe, fireframeTimer, happy_end, bgmList
+    bgmList[curStage].stop()
+    StageDataList = {}
+    curStage = None
+    MonsterList = {}
+    PortalList = {}
+    PortalState = {}
+    PortalEffect = None
+    ShopItemList = []
+    miniMapX = 900
+    miniMapY = 10
+    fireframe = 0
+    fireframeTimer = 0
+    happy_end = False
+    bgmList = {}
 
 class Pos:
     def __init__(self, x, y):
@@ -29,14 +51,19 @@ class Pos:
 pos = Pos(0, 0)
 
 def ChangeStage(player, goTo ):
-    global curStage, StageDataList, miniMapX
+    global curStage, StageDataList, miniMapX, happy_end, bgmList
     if goTo == 'shop':
         PortalList['shop'][0].goTo = curStage
+    if curStage == 'stage2_exit' and goTo == 'stage2_exit':
+        happy_end = True
+        curStage = goTo
+        return
     if curStage != goTo:
         Bullet.BulletList.clear()
         CoinManager.coinList.clear()
         EffectManager.EffectList.clear()
     curStage = goTo
+    bgmList[curStage].repeat_play()
     player.x = StageDataList[curStage]['inTeleportX']
     player.y = StageDataList[curStage]['inTeleportY'] + 30
     Camera.SetPos(player.x, player.y)
@@ -51,7 +78,7 @@ def MiniMapRender(x, y , r,g,b):
     draw_rectangle(drawX -2, drawY, drawX+2, drawY+4, r, g, b, True)
 
 def GenStageData() :
-    global StageDataList, curStage, MonsterList, PortalList, PortalState, ShopItemList
+    global StageDataList, curStage, MonsterList, PortalList, PortalState, ShopItemList, bgmList
     curStage = 'stage1_1'
     with open('StageData.json') as f:
         StageDataList = json.load(f)
@@ -129,16 +156,22 @@ def GenStageData() :
     ShopItemList.append(RifleItem(1221, 920))
     ShopItemList.append(SniperItem(1338, 920))
     ShopItemList.append(HealthItem(1470, 930))
-
-
+    bgmList['stage1_1'] = load_music('Resource/Sound/bgm_stage1.mp3')
+    bgmList['stage1_1'].set_volume(64)
+    bgmList['stage1_2'] = load_music('Resource/Sound/bgm_stage2.mp3')
+    bgmList['stage1_2'].set_volume(64)
+    bgmList['stage2_boss'] = load_music('Resource/Sound/bgm_stage3.mp3')
+    bgmList['stage2_boss'].set_volume(64)
+    bgmList['stage2_exit'] = load_music('Resource/Sound/bgm_stage4.mp3')
+    bgmList['stage2_exit'].set_volume(64)
+    bgmList['shop'] = load_music('Resource/Sound/bgm_shop.mp3')
+    bgmList['shop'].set_volume(64)
+    bgmList[curStage].repeat_play()
 
 def Render():
-    global curStage, MonsterList, PortalList, StageDataList, ShopItemList
+    global curStage, MonsterList, PortalList, StageDataList, ShopItemList, fireframe, fireframeTimer
+
     DrawManager.StageGraphicList[curStage].Draw()
-    for i in PortalList[curStage] :
-        i.render()
-    for i in MonsterList[curStage] :
-        i.Render()
 
     for row in range(len(StageDataList[curStage]['data'])):
         for col in range(len(StageDataList[curStage]['data'][row])):
@@ -154,14 +187,30 @@ def Render():
                 elif data < 500: DrawManager.BackObjectGraphicList['notGoodRock'].Draw(cx, cy)
                 else: DrawManager.BackObjectGraphicList['goodRock'].Draw(cx, cy)
 
+
+    for i in PortalList[curStage] :
+        i.render()
+    for i in MonsterList[curStage] :
+        i.Render()
+
     if curStage == 'shop':
         for i in ShopItemList:
             i.render()
+    if curStage == 'stage2_exit':
+        DrawManager.EffectGraphicList['fire'].Draw(100 + Camera.x, 0 + Camera.y, fireframe )
+        DrawManager.EffectGraphicList['fire'].Draw(80 + Camera.x, 100 + Camera.y, (fireframe+2)%15 )
+        DrawManager.EffectGraphicList['fire'].Draw(110 + Camera.x, 200 + Camera.y, (fireframe+4)%15 )
+        DrawManager.EffectGraphicList['fire'].Draw( 70 + Camera.x, -100 + Camera.y, (fireframe+8)%15 )
+        DrawManager.EffectGraphicList['fire'].Draw( 120 + Camera.x, 300 + Camera.y, (fireframe+10)%15 )
+        DrawManager.EffectGraphicList['fire'].Draw( 120 + Camera.x, -200 + Camera.y, (fireframe+12)%15 )
+        DrawManager.EffectGraphicList['fire'].Draw( 90 + Camera.x, 250 + Camera.y, (fireframe+14)%15 )
+        DrawManager.EffectGraphicList['fire'].Draw( 120 + Camera.x, 350 + Camera.y, (fireframe+1)%15 )
+
 
 
 
 def Update(frameTime):
-    global curStage, MonsterList, PortalList, PortalState, PortalEffect, pos
+    global curStage, MonsterList, PortalList, PortalState, PortalEffect, pos, fireframeTimer, fireframe
     for i in MonsterList[curStage] :
         i.Update(frameTime)
     for i in MonsterList[curStage] :
@@ -175,6 +224,14 @@ def Update(frameTime):
         PortalList[curStage][1].active = True
     pos.x = Camera.x + Camera.w/2
     pos.y = Camera.y
+    if curStage == 'stage2_exit':
+        Camera.offsetX += 5
+        Camera.Move(5, 0)
+        fireframeTimer += frameTime
+        if(fireframeTimer >= DrawManager.frame_Interval):
+            increaseRate = int(fireframeTimer / DrawManager.frame_Interval)
+            fireframe = (fireframe + increaseRate) % 15
+            fireframeTimer = 0
 
 
 def GetMapDate(row, col):
@@ -208,6 +265,7 @@ def BulletMapCollisionCheck(bullet, shiftX, shiftY):
             if data <= 1:
                 data = 0
                 EffectManager.CallEffect('box_break', None, False, True, cx, cy)
+                SoundManager.CallEffectSound('debris')
             value = str('%d' %data)
             StageDataList[curStage]['data'][row][rightCol] = value
         elif 300 < data and data <= 600:
@@ -219,6 +277,7 @@ def BulletMapCollisionCheck(bullet, shiftX, shiftY):
             if data <= 300:
                 data = 0
                 EffectManager.CallEffect('rock_break', None, False, True, cx, cy)
+                SoundManager.CallEffectSound('debris')
             value = str('%d' %data)
             StageDataList[curStage]['data'][row][rightCol] = value
         return True

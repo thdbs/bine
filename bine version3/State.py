@@ -2,6 +2,7 @@ __author__ = '성소윤'
 
 import Action
 import DrawManager
+import SoundManager
 
 class State:
     def enter(self, character):

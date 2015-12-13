@@ -409,6 +409,8 @@ def GenGraphicList() :
     EffectGraphicList['pickup_sniper'] = Animation(image, image.w/16 ,image.h, 16 )
     image = load_image('Resource/Sprites/Item/spr_pickup_health_1.png')
     EffectGraphicList['pickup_health'] = Animation(image, image.w/1 ,image.h, 1 )
+    image = load_image('Resource/Sprites/Effect/spr_grenade_exp.png')
+    EffectGraphicList['explode'] = AnimationCenter(image, image.w/11 ,image.h, 11 )
 
 
 

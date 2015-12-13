@@ -6,5 +6,5 @@
   "Sniper" : { "speed" : 2000 , "speedRates" : 10
   , "collisionBoxWidth" : 20, "collisionBoxHeight" : 20, "maximumRange" : 10000, "hit" : 40 },
   "Boss" : { "speed" : 2000 , "speedRates" : 5
-  , "collisionBoxWidth" : 20, "collisionBoxHeight" : 13, "maximumRange" : 10000, "hit" : 50 }
+  , "collisionBoxWidth" : 20, "collisionBoxHeight" : 13, "maximumRange" : 10000, "hit" : 30 }
 }

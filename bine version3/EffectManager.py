@@ -1,6 +1,7 @@
 __author__ = '성소윤'
 import DrawManager
 import Action
+import Camera
 
 EffectList = []
 
@@ -16,6 +17,7 @@ def Update(frameTime):
             EffectList.remove(i)
     for i in EffectList:
         i.update(frameTime)
+    Camera.ShakeCamera()
 
 def CallEffect(grahpic_name, owner, isCharcter, isStatic  = False ,x = None, y = None):
     global EffectList

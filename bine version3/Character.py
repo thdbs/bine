@@ -4,6 +4,7 @@ import PlayerState
 import Action
 import EffectManager
 from Arms import *
+import SoundManager
 
 
 character_data = {}
@@ -63,6 +64,9 @@ class Character:
                         self.death = True
                         if self.name != 'Jimmy' : self.GenCoin()
                 bullet.alive = False
+                if bullet.name == 'boss':
+                    EffectManager.CallEffect('explode', self, False )
+                    if not Camera.effect : Camera.effect = True
                 return(True)
         return(False)
     
@@ -160,7 +164,7 @@ class Jimmy(Character):
         self.bullet = {
             "Pistol" : { "reloaded" : Jimmy.maxPistol, "storage" :  character_data['Jimmy']['pistol'], "max" : Jimmy.maxPistol },
             "Rifle" : { "reloaded" : Jimmy.maxRifle, "storage" :  character_data['Jimmy']['rifle'], "max" : Jimmy.maxRifle },
-            "Sniper" : { "reloaded" : Jimmy.maxSniper, "storage" :  character_data['Jimmy']['sniper'], "max" : Jimmy.maxRifle }
+            "Sniper" : { "reloaded" : Jimmy.maxSniper, "storage" :  character_data['Jimmy']['sniper'], "max" : Jimmy.maxSniper }
         }
         self.reloading = False
 
@@ -170,6 +174,7 @@ class Jimmy(Character):
             self.reloadEffect = None
             self.reloading = False
             need = self.bullet[self.ArmsNameList[self.curArm]]['max']- self.bullet[self.ArmsNameList[self.curArm]]['reloaded']
+            #print(self.bullet[self.ArmsNameList[self.curArm]]['max'], need)
             need = min(need, self.bullet[self.ArmsNameList[self.curArm]]['storage'])
             self.bullet[self.ArmsNameList[self.curArm]]['reloaded'] += need
             self.bullet[self.ArmsNameList[self.curArm]]['storage'] -= need
@@ -177,10 +182,19 @@ class Jimmy(Character):
         Character.Update(self, frameTime)
         if self.shot and not self.reloading and not self.death and self.bullet[self.ArmsNameList[self.curArm]]['reloaded'] > 0 :
             self.ArmsList[self.ArmsNameList[self.curArm]].Shoot(self,InputManager.mouseX + Camera.x - self.x, InputManager.mouseY + Camera.y - self.y - self.hCollisionBox/2 )
+            if not Camera.effect : Camera.effect = True
+            if self.curArm != 'Sniper' :  SoundManager.CallEffectSound('pistol')
+            else :  SoundManager.CallEffectSound('sniper')
             self.bullet[self.ArmsNameList[self.curArm]]['reloaded'] -= 1
             if self.bullet[self.ArmsNameList[self.curArm]]['reloaded'] == 0 and self.bullet[self.ArmsNameList[self.curArm]]['storage'] > 0 :
                 self.reloadEffect = EffectManager.CallEffect('reloading_long', InputManager.mPos, False)
+                SoundManager.CallEffectSound('reload')
                 self.reloading = True
+
+        if StageManager.curStage == 'stage2_exit':
+            if self.x - Camera.x <= 200  and not self.death:
+                self.ChangeState(PlayerState.stateList['death'], 'death')
+                self.death = True
 
 
         self.shieldTimer += frameTime
@@ -237,9 +251,11 @@ class Jimmy(Character):
                 if self.bullet[self.ArmsNameList[self.curArm]]['storage'] > 0 and self.bullet[self.ArmsNameList[self.curArm]]['reloaded'] < self.bullet[self.ArmsNameList[self.curArm]]['max']\
                         and not self.reloading:
                     self.reloadEffect = EffectManager.CallEffect('reloading', InputManager.mPos, False)
+                    SoundManager.CallEffectSound('reload')
                     self.reloading = True
         if InputManager.GetKeyState(SDLK_q) :
             self.curArm = (self.curArm + 1) % 3
             InputManager.KeyUp(SDLK_q)
+            SoundManager.CallEffectSound('weapon_switch')
         if InputManager.LButton : self.shot = True
         else : self.shot = False

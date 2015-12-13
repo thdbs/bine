@@ -2,7 +2,9 @@ __author__ = '성소윤'
 
 import InputManager
 import Camera
+import StageManager
 from AIstate import *
+import SoundManager
 
 stateList = {}
 def GenStateList() :
@@ -24,6 +26,7 @@ class PlayerIdle(Idle):
     def update(self, player, frameTime):
         if player.vx != 0 or player.vy != 0 :
             player.ChangeState(stateList['Jimmy_walk'], 'walk')
+            SoundManager.CallEffectSound('walk')
             player.Update(frameTime)
             return
         Idle.update(self, player, frameTime)
@@ -44,10 +47,11 @@ class PlayerWalk(Walk):
             return
         if player.dash:
             player.ChangeState(stateList['Jimmy_dash'], 'dash')
+            SoundManager.CallEffectSound('dash')
             player.Update(frameTime)
             return
         Walk.update(self, player, frameTime)
-        Camera.SetPos(player.x, player.y)
+        if StageManager.curStage != 'stage2_exit' : Camera.SetPos(player.x, player.y)
 
     def render(self, character):
         if InputManager.mouseX >= 640:
@@ -60,13 +64,14 @@ class PlayerWalk(Walk):
 class PlayerDash(Dash):
     def update(self, player, frameTime):
         Dash.update(self, player, frameTime)
-        Camera.SetPos(player.x, player.y)
+        if StageManager.curStage != 'stage2_exit' : Camera.SetPos(player.x, player.y)
         player.dashTimer += frameTime
         if player.dashTimer > player.dashTime :
             player.dashTimer = 0
             player.dash = False
             player.vx, player.vy = player.vx / player.DASH_SPEED_PPS, player.vy / player.DASH_SPEED_PPS
             player.ChangeState(stateList['Jimmy_walk'], 'walk')
+            SoundManager.CallEffectSound('walk')
 
     def render(self, character):
         if InputManager.mouseX >= 640:
@@ -79,7 +84,7 @@ class PlayerDash(Dash):
 class PlayerMelee(Melee):
     def update(self, player, frameTime):
         Melee.update(self,player, frameTime)
-        Camera.SetPos(player.x, player.y)
+        if StageManager.curStage != 'stage2_exit' : Camera.SetPos(player.x, player.y)
         if not player.activeAttack  :
             player.vx , player.vy = 0, 0
             player.ChangeState(stateList['Jimmy_idle'], 'idle')

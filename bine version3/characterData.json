@@ -6,32 +6,32 @@
     "maxPistol" : 20, "maxRifle" : 100, "maxSniper" : 10,
     "pistol" : 50, "rifle" : 500, "sniper" : 30
   }
-  ,"Turtle" : { "name" : "Turtle", "maxHealth" : 100, "maxShield" : 0
+  ,"Turtle" : { "name" : "Turtle", "maxHealth" : 50, "maxShield" : 0
   , "collisionBoxWidth" : 50, "collisionBoxHeight" : 74
   , "walkSpeedPPS" : 300
   , "detectionRange" : 600, "attackRange" : 300 , "attackTime" : 0.5
   , "coin" : 1
   }
-  ,"DashDuck" : { "name" : "DashDuck", "maxHealth" : 100, "maxShield" : 60
+  ,"DashDuck" : { "name" : "DashDuck", "maxHealth" : 50, "maxShield" : 30
   , "collisionBoxWidth" : 35, "collisionBoxHeight" : 64
   , "walkSpeedPPS" : 300, "dashSpeedPPS" : 3, "dashTime" : 0.3
   , "detectionRange" : 500, "attackRange" : 300, "attackTime" : 0.1 , "shieldTimer" : 15.0
   , "coin" : 3
   }
-  ,"SniperDuck" : { "name" : "SniperDuck", "maxHealth" : 100, "maxShield" : 60
+  ,"SniperDuck" : { "name" : "SniperDuck", "maxHealth" : 50, "maxShield" : 30
   , "collisionBoxWidth" : 35, "collisionBoxHeight" : 70 , "shieldTimer" : 15.0
   , "walkSpeedPPS" : 300
   , "detectionRange" : 700, "attackRange" : 1000, "attackTime" : 3.0
   , "coin" : 5
   }
-  ,"Kaze" : { "name" : "Kaze", "maxHealth" : 100, "maxShield" : 0
+  ,"Kaze" : { "name" : "Kaze", "maxHealth" : 50, "maxShield" : 0
   , "collisionBoxWidth" : 45, "collisionBoxHeight" : 40
   , "walkSpeedPPS" : 500, "dashSpeedPPS" : 2, "dashTime" : 0.1, "attackTime" : 1.0
   , "meleeTime" : 0.3, "attack": 1
   , "detectionRange" : 700, "attackRange" : 100
   , "coin" : 3
   }
-  ,"Boss" : { "name" : "Boss", "maxHealth" : 150, "maxShield" : 150
+  ,"Boss" : { "name" : "Boss", "maxHealth" : 75, "maxShield" : 75
   , "collisionBoxWidth" : 70, "collisionBoxHeight" : 108
   , "walkSpeedPPS" : 300
   , "detectionRange" : 700, "attackRange" : 800, "attackTime" : 0.3

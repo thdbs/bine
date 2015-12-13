@@ -10,28 +10,81 @@ import Bullet
 import UIManager
 from pico2d import *
 import CoinManager
+import bad_end_state
+import happy_end_state
 
 
 name = "MainState"
 
-
 jimmy = None
+created = False
 
 def enter():
-    global jimmy, MonsterList
-    GenData.GenData()
+    global jimmy, created
+    if not created :
+        GenData.GenData()
+        created = True
+    StageManager.GenStageData()
     jimmy = Jimmy(StageManager.StageDataList[StageManager.curStage]['inTeleportX'] ,StageManager.StageDataList[StageManager.curStage]['inTeleportY'])
-    StageManager.MonsterList['stage1_2'].append(DashDuck(StageManager.StageDataList['stage1_2']['inTeleportX'] - 500 ,StageManager.StageDataList['stage1_2']['inTeleportY'], jimmy))
-    StageManager.MonsterList['stage2_exit'].append(Turtle(StageManager.StageDataList['stage2_exit']['inTeleportX'] + 500 ,StageManager.StageDataList['stage2_exit']['inTeleportY'], jimmy))
     StageManager.MonsterList['stage1_1'].append(DashDuck(StageManager.StageDataList['stage1_1']['inTeleportX'] + 500 ,StageManager.StageDataList['stage1_1']['inTeleportY'], jimmy))
-    StageManager.MonsterList['stage1_1'].append(Kaze(StageManager.StageDataList['stage1_1']['outTeleportX']  ,StageManager.StageDataList['stage1_1']['outTeleportY'], jimmy))
+    StageManager.MonsterList['stage1_1'].append(Turtle(StageManager.StageDataList['stage1_1']['outTeleportX']  ,StageManager.StageDataList['stage1_1']['outTeleportY'], jimmy))
+    StageManager.MonsterList['stage1_1'].append(Turtle(1517 ,1211, jimmy))
+    StageManager.MonsterList['stage1_1'].append(Turtle(1513 ,1127, jimmy))
+    StageManager.MonsterList['stage1_1'].append(DashDuck(2017 ,1211, jimmy))
+    StageManager.MonsterList['stage1_1'].append(Turtle(2010 ,1099, jimmy))
+    StageManager.MonsterList['stage1_1'].append(DashDuck(2237 ,1455, jimmy))
+    StageManager.MonsterList['stage1_1'].append(Turtle(2381 ,1463, jimmy))
+    StageManager.MonsterList['stage1_1'].append(Turtle(3501 ,1259, jimmy))
+    StageManager.MonsterList['stage1_1'].append(DashDuck(3725 ,1119, jimmy))
+    StageManager.MonsterList['stage1_1'].append(Turtle(3735 ,1171, jimmy))
+
+    StageManager.MonsterList['stage1_2'].append(DashDuck(StageManager.StageDataList['stage1_2']['inTeleportX'] - 500 ,StageManager.StageDataList['stage1_2']['inTeleportY'], jimmy))
+    StageManager.MonsterList['stage1_2'].append(Kaze(857 ,2039, jimmy))
+    StageManager.MonsterList['stage1_2'].append(SniperDuck(785 ,1943, jimmy))
+    StageManager.MonsterList['stage1_2'].append(Turtle(1265 ,2095, jimmy))
+    StageManager.MonsterList['stage1_2'].append(SniperDuck(905 ,1543, jimmy))
+    StageManager.MonsterList['stage1_2'].append(DashDuck(849 ,1439, jimmy))
+    StageManager.MonsterList['stage1_2'].append(Kaze(1721 ,951, jimmy))
+    StageManager.MonsterList['stage1_2'].append(Turtle(2023 ,1967, jimmy))
+    StageManager.MonsterList['stage1_2'].append(DashDuck(2145 ,1847, jimmy))
+    StageManager.MonsterList['stage1_2'].append(Kaze(2849 ,1415, jimmy))
+    StageManager.MonsterList['stage1_2'].append(Kaze(3041 ,1385, jimmy))
+    StageManager.MonsterList['stage1_2'].append(DashDuck(2905 ,1247, jimmy))
+
     StageManager.MonsterList['stage2_boss'].append(SniperDuck(StageManager.StageDataList['stage2_boss']['inTeleportX'] + 500 ,StageManager.StageDataList['stage2_boss']['inTeleportY'], jimmy))
-    StageManager.MonsterList['stage2_boss'].append(Kaze(StageManager.StageDataList['stage2_boss']['inTeleportX'] + 1000 ,StageManager.StageDataList['stage2_boss']['inTeleportY'], jimmy))
+    StageManager.MonsterList['stage2_boss'].append(DashDuck(StageManager.StageDataList['stage2_boss']['inTeleportX'] + 1000 ,StageManager.StageDataList['stage2_boss']['inTeleportY'], jimmy))
+    StageManager.MonsterList['stage2_boss'].append(DashDuck(1353,1455, jimmy))
+    StageManager.MonsterList['stage2_boss'].append(Turtle(1457,1399, jimmy))
+    StageManager.MonsterList['stage2_boss'].append(Turtle(1577,1636, jimmy))
+    StageManager.MonsterList['stage2_boss'].append(DashDuck(1665,967, jimmy))
+    StageManager.MonsterList['stage2_boss'].append(Boss(2257,1647, jimmy))
+    StageManager.MonsterList['stage2_boss'].append(SniperDuck(2773,2231, jimmy))
+    StageManager.MonsterList['stage2_boss'].append(Turtle(2877,2343, jimmy))
+    StageManager.MonsterList['stage2_boss'].append(DashDuck(2881,1495, jimmy))
+    StageManager.MonsterList['stage2_boss'].append(SniperDuck(3041,1511, jimmy))
+    StageManager.MonsterList['stage2_boss'].append(SniperDuck(3001,1303, jimmy))
+
+
+
+    StageManager.MonsterList['stage2_exit'].append(Turtle(StageManager.StageDataList['stage2_exit']['inTeleportX'] + 500 ,StageManager.StageDataList['stage2_exit']['inTeleportY'], jimmy))
+    StageManager.MonsterList['stage2_exit'].append(Turtle(1609 ,1295, jimmy))
+    StageManager.MonsterList['stage2_exit'].append(DashDuck(2721 ,855, jimmy))
+    StageManager.MonsterList['stage2_exit'].append(Kaze(3297 ,1183, jimmy))
+    StageManager.MonsterList['stage2_exit'].append(Turtle(4297 ,1287, jimmy))
+    StageManager.MonsterList['stage2_exit'].append(Kaze(4337 ,735, jimmy))
+    StageManager.MonsterList['stage2_exit'].append(DashDuck(4881 ,791, jimmy))
+    StageManager.MonsterList['stage2_exit'].append(Kaze(3041 ,1111, jimmy))
+    StageManager.MonsterList['stage2_exit'].append(Turtle(5533 ,903, jimmy))
+    #StageManager.MonsterList['stage2_exit'].append(DashDuck(6897 ,999, jimmy))
+
 
 
 def exit():
     global jimmy
-    del(jimmy)
+    jimmy = None
+    Camera.Init()
+    StageManager.Init()
+    CoinManager.Init()
 
 def pause():
     pass
@@ -87,7 +140,10 @@ def update(frameTime):
         #수정해주기
         if not jimmy.alive:
             delay(0.2)
-            game_framework.quit()
+            game_framework.change_state(bad_end_state)
+        if StageManager.happy_end :
+            delay(0.2)
+            game_framework.change_state(happy_end_state)
     delay(0.01)
 
 

@@ -6,6 +6,7 @@ from Arms import *
 import random
 import CoinManager
 import game_framework
+import SoundManager
 
 
 class Monster(Character.Character):
@@ -13,9 +14,14 @@ class Monster(Character.Character):
         Character.Character.Update(self, frameTime)
         if self.shot and self.attackTimer == 0  and not self.death:
             self.Arm.Shoot(self, self.target.x - self.x, (self.target.y + self.target.hCollisionBox/2) - (self.y + self.hCollisionBox/2) )
+            if self.name == 'Boss' : SoundManager.CallEffectSound('sniper')
         self.attackTimer += frameTime
         if self.attackTimer > self.attackTime :
             self.attackTimer = 0
+        if StageManager.curStage == 'stage2_exit':
+            if self.x - Camera.x <= 200  and not self.death:
+                self.ChangeState(PlayerState.stateList['death'], 'death')
+                self.death = True
 
     def Render(self):
         if not self.hit : Character.Character.Render(self)
